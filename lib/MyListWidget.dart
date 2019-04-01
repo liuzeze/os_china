@@ -9,7 +9,7 @@ class MyListWidget extends StatefulWidget {
 }
 
 class mylist extends State<MyListWidget> {
-  List<String> list = List.generate(5, (index) => "条目条目第$index个");
+  List<String> list = List.generate(15, (index) => "条目条目第$index个");
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +17,13 @@ class mylist extends State<MyListWidget> {
     return Scaffold(
         appBar: AppBar(
             title: Text(
-          "标题标题标题标题标题标题标题标题标题标题标题标题",
+          "标题",
           overflow: TextOverflow.fade,
           textAlign: TextAlign.center,
           maxLines: 2,
         )),
-        floatingActionButton: FloatingActionButton(onPressed: (){
-          Scaffold.of(context).showSnackBar(
-              SnackBar(content: Text("点击点击")));
+        floatingActionButton: FloatingActionButton(onPressed: () {
+          Scaffold.of(context).showSnackBar(SnackBar(content: Text("点击点击")));
         }),
         body: Container(
             alignment: Alignment.bottomCenter,
@@ -46,9 +45,8 @@ class mylist extends State<MyListWidget> {
                       child: Row(
                         children: <Widget>[
                           Text(list[index]),
-
                           Image.network(
-                            "https://upload-images.jianshu.io/upload_images/1420036-35ac9ea427d62844?imageMogr2/auto-orient/strip%7CimageView2/2/w/280",
+                            "http://p.codekk.com/images/weixin-codekk-160.jpg",
                             width: 50,
                             height: 50,
                           )
