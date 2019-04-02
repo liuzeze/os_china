@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_app/demo/flutter/5-form.dart';
+import 'package:flutter_app/demo/flutter/widget/5-form.dart';
 
 void main() => runApp(new MateralWidget());
 

@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_app/demo/flutter/8-dialog.dart';
-import 'package:flutter_app/demo/flutter/9-card.dart';
+import 'package:flutter_app/demo/flutter/widget/8-dialog.dart';
+import 'package:flutter_app/demo/flutter/widget/9-card.dart';
 
 void main() => runApp(new MateralWidget());
 
