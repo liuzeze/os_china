@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/ui/home_pager.dart';
 import 'package:flutter_app/utils/config_utils.dart';
-import 'package:flutter_app/utils/screen_utils.dart';
 
 void main() {
   if (Platform.isAndroid) {
@@ -20,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
       title: "开源中国",
       theme: ThemeData(primaryColor: Color(ColorUtils.c_ffffff)),
       home: HomePager(),
