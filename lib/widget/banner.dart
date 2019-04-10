@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/utils/config_utils.dart';
 
 typedef void OnBannerClickListener<D>(int index, D itemData);
 typedef void OnBannerSelectListener<D>(int index, D itemData);
@@ -20,6 +19,7 @@ class BannerView<T> extends StatefulWidget {
   final List<T> data;
   final int indicatorBg;
   final int indicatorColor;
+  final double indicatorSize;
   final int indicatorSelectColor;
   final MainAxisAlignment indicatorAlignmentPos;
   final BannerItemView<T> buildItem;
@@ -32,6 +32,7 @@ class BannerView<T> extends StatefulWidget {
     this.buildTitle,
     this.onBannerSelectListener,
     this.onBannerClickListener,
+    this.indicatorSize = 5.0,
     this.delayTime = 3,
     this.scrollTime = 200,
     this.height = 200.0,
@@ -93,7 +94,7 @@ class BannerViewState extends State<BannerView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             CircleAvatar(
-              radius: SizeUtils.px_5,
+              radius: widget.indicatorSize,
               backgroundColor: _currentIndex % widget.data.length == index
                   ? Color(widget.indicatorSelectColor)
                   : Color(widget.indicatorColor),

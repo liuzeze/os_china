@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/utils/config_utils.dart';
 import 'package:flutter_app/widget/banner.dart';
 
 class News extends StatefulWidget {
@@ -32,6 +33,7 @@ class _NewsState extends State<News> {
       shrinkWrap: true,
       children: <Widget>[
         BannerView(
+          indicatorSize:SizeUtils.px_5,
           onBannerClickListener: (index, itemData) {
             print('liuze${itemData.title}');
           },
