@@ -24,22 +24,43 @@ class _HomePagerState extends State<HomePager> {
   void initState() {
     super.initState();
     //标题
-    _navigationText = ['资讯', '动弹', '发现', '我的'];
+    //图片
+    getBottomNavigitors();
     _pageController = PageController(initialPage: _currenntIndex);
+  }
+
+  void getBottomNavigitors() {
+    _navigationText = ['资讯', '动弹', '发现', '我的'];
+
+    //图片
+    _navigitionItems = [
+      BottomNavigationBarView(
+          title: '资讯',
+          icon: 'assets/images/ic_nav_news_normal.png',
+          activieIcon: 'assets/images/ic_nav_news_actived.png'),
+      BottomNavigationBarView(
+          title: '动弹',
+          icon: 'assets/images/ic_nav_tweet_normal.png',
+          activieIcon: 'assets/images/ic_nav_tweet_actived.png'),
+      BottomNavigationBarView(
+          title: '发现',
+          icon: 'assets/images/ic_nav_discover_normal.png',
+          activieIcon: 'assets/images/ic_nav_discover_actived.png'),
+      BottomNavigationBarView(
+          title: '我的',
+          icon: 'assets/images/ic_nav_my_normal.png',
+          activieIcon: 'assets/images/ic_nav_my_pressed.png'),
+    ];
+    _pageViews = [
+      News(),
+      Tweet(),
+      Find(),
+      My(),
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
-    //屏幕适配
-    ScreenUtil.instance
-      ..allowFontScaling = true
-      ..width = 750
-      ..height = 1334
-      ..init(context);
-
-    //图片
-    getBottomNavigitors();
-
     return Scaffold(
       appBar: AppBar(
         //状态栏字体颜色
@@ -80,33 +101,5 @@ class _HomePagerState extends State<HomePager> {
         titleList: ['发布动弹', '动弹小黑屋', '关于', '设置'],
       ),
     );
-  }
-
-  void getBottomNavigitors() {
-    //图片
-    _navigitionItems = [
-      BottomNavigationBarView(
-          title: '资讯',
-          icon: 'assets/images/ic_nav_news_normal.png',
-          activieIcon: 'assets/images/ic_nav_news_actived.png'),
-      BottomNavigationBarView(
-          title: '动弹',
-          icon: 'assets/images/ic_nav_tweet_normal.png',
-          activieIcon: 'assets/images/ic_nav_tweet_actived.png'),
-      BottomNavigationBarView(
-          title: '发现',
-          icon: 'assets/images/ic_nav_discover_normal.png',
-          activieIcon: 'assets/images/ic_nav_discover_actived.png'),
-      BottomNavigationBarView(
-          title: '我的',
-          icon: 'assets/images/ic_nav_my_normal.png',
-          activieIcon: 'assets/images/ic_nav_my_pressed.png'),
-    ];
-    _pageViews = [
-      News(),
-      Tweet(),
-      Find(),
-      My(),
-    ];
   }
 }

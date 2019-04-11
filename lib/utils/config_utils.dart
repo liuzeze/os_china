@@ -11,11 +11,11 @@ class ColorUtils {
 }
 
 class SizeUtils {
-  static final double px_5 = ScreenUtil().setWidth(5);
-  static final double px_8 = ScreenUtil().setWidth(8);
-  static final double px_10 = ScreenUtil().setWidth(10);
-  static final double px_30 = ScreenUtil().setWidth(30);
-  static final double px_50 = ScreenUtil().setWidth(50);
-  static final double px_300 = ScreenUtil().setWidth(300);
-  static final double px_400 = ScreenUtil().setWidth(400);
+  static final double px_5 = ScreenUtil().getWidthPx(5);
+  static final double px_8 = ScreenUtil().getWidthPx(8);
+  static final double px_10 = ScreenUtil().getWidthPx(10);
+  static final double px_30 = ScreenUtil().getWidthPx(30);
+  static final double px_50 = ScreenUtil().getWidthPx(50);
+  static final double px_300 = ScreenUtil().getWidthPx(300);
+  static final double px_400 = ScreenUtil().getWidthPx(400);
 }

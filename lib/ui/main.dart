@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/ui/home_pager.dart';
 import 'package:flutter_app/utils/config_utils.dart';
+import 'package:flutter_app/utils/screen_utils.dart';
 
 void main() {
   if (Platform.isAndroid) {
@@ -12,6 +13,9 @@ void main() {
         SystemUiOverlayStyle(statusBarColor: Colors.transparent);
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   }
+//  1080  1920 960   720  1280
+  setDesignWHD(360, 640, density: 2);
+//  setDesignWHD(360, 640, density: 2);
   runApp(MyApp());
 }
 
