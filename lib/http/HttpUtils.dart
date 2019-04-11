@@ -13,7 +13,7 @@ class HttpUtils {
     responseType: ResponseType.json
   ))
     ..interceptors.add(InterceptorsWrapper(onRequest: (RequestOptions request) {
-      print('正在 request');
+      print('正在 request==${request.uri}');
       return request;
     }, onResponse: (Response response) {
       print('正在 response');

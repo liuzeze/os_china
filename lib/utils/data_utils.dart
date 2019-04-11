@@ -32,7 +32,6 @@ class DataUtils {
     int currentSecond = dateTime.second;
     var token = sp.getString(ACCESS_TOKEN);
     int time = sp.getInt(EXPIRES_IN);
-    print('liuze=====$time');
     return token != null && time > currentSecond;
   }
 }

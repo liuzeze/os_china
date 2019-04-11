@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_app/global/constant.dart';
 import 'package:flutter_app/http/HttpUtils.dart';
+import 'package:flutter_app/utils/data_utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class RequestApi {
@@ -16,5 +17,17 @@ class RequestApi {
       "dataType": 'json',
     };
     return await HttpUtils.get(AppUrl.OAUTH2_TOKEN, params: map);
+  }
+
+  /// 获取登陆信息
+  static Future<Map<String, dynamic>> getOpenapiUser() async {
+    return await DataUtils.getToken().then((token) {
+      return {
+        "access_token": token,
+        "dataType": 'json',
+      };
+    }).then((map) async {
+      return await HttpUtils.get(AppUrl.OPENAPI_USER, params: map);
+    });
   }
 }

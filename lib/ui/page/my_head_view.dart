@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/http/request_api.dart';
 import 'package:flutter_app/ui/page/login_webview.dart';
 import 'package:flutter_app/utils/config_utils.dart';
+import 'package:flutter_app/utils/data_utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class MyHeadwidget extends StatefulWidget {
@@ -10,7 +12,11 @@ class MyHeadwidget extends StatefulWidget {
 
 class _MyHeadwidgetState extends State<MyHeadwidget> {
   void _login() {
-    Fluttertoast.showToast(msg: "去登陆");
+    RequestApi.getOpenapiUser().then((map) {
+
+      Fluttertoast.showToast(msg: map.toString());
+
+    });
   }
 
   @override
@@ -25,14 +31,25 @@ class _MyHeadwidgetState extends State<MyHeadwidget> {
           children: <Widget>[
             GestureDetector(
               onTap: () {
-                Navigator.push<String>(context,
-                    MaterialPageRoute(builder: (context) {
-                      return LoginWebView();
-                    })).then((statue) {
-                  if (statue == "success") {
+                DataUtils.isLogin().then((b){
+                  if (b) {
                     _login();
+                  }else{
+                    Navigator.push<String>(context,
+                        MaterialPageRoute(builder: (context) {
+                          return LoginWebView();
+                        })).then((statue) {
+                      if (statue == "success") {
+
+                        _login();
+                      }
+                    });
                   }
+
                 });
+
+
+
               },
               child: Container(
                 width: SizeUtils.px_100,
@@ -46,7 +63,7 @@ class _MyHeadwidgetState extends State<MyHeadwidget> {
                     image: DecorationImage(
                         fit: BoxFit.cover,
                         image:
-                        AssetImage('assets/images/ic_avatar_default.png'))),
+                            AssetImage('assets/images/ic_avatar_default.png'))),
               ),
             ),
             Text(

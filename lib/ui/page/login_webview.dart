@@ -26,9 +26,6 @@ class _LoginWebViewState extends State<LoginWebView> {
           isLoading = false;
         });
       }
-
-      //https://github.com/liuzeze?code=GM7aqk&state=
-
       if (url != null && url.length > 0 && url.contains('?code=')) {
         String code = url.split('?')[1].split('&')[0].split('=')[1];
         RequestApi.getOauth2Token(code).then((response) {
@@ -38,22 +35,6 @@ class _LoginWebViewState extends State<LoginWebView> {
         }).catchError((e) {
           print('initState  = ===== '+e.toString());
         });
-       /* Map<String, String> map = {
-          "client_id": AppUrl.CLIENT_ID,
-          "client_secret": AppUrl.CLIENT_SECRET,
-          "grant_type": 'authorization_code',
-          "redirect_uri": AppUrl.REDIRECT_URI,
-          "code": code,
-          "dataType": 'json',
-        };
-        HttpUtils.get(AppUrl.OAUTH2_TOKEN, params: map).then((response) {
-          DataUtils.saveTokenInfor(response);
-          Navigator.pop(context, "success");
-          DataUtils.isLogin();
-        }).catchError((e) {
-          print('initState  = ===== '+e.toString());
-        });
-*/
 
       }
     });
@@ -61,7 +42,6 @@ class _LoginWebViewState extends State<LoginWebView> {
 
   @override
   Widget build(BuildContext context) {
-    //GET /authorize?response_type=code&client_id=s6BhdRkqt3&state=xyz&redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb HTTP/1.1
     return WebviewScaffold(
       url: AppUrl.BASE_URL +
           AppUrl.OAUTH2_AUTHORIZE +
