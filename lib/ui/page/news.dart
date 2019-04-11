@@ -39,7 +39,6 @@ class _NewsState extends State<News> {
           indicatorAlignmentPos: MainAxisAlignment.end,
           indicatorSize:SizeUtils.px_5,
           onBannerClickListener: (index, itemData) {
-            print('liuze${itemData.title}');
           },
           data: data2,
           buildTitle: (int index, itemData) {

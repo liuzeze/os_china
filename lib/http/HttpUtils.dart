@@ -1,42 +1,66 @@
 import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:flutter_app/global/constant.dart';
 
 class HttpUtils {
 
- static Dio mDio;
 
-  // 工厂模式
-  factory HttpUtils() => _getInstance();
+  static Dio mDio = Dio(BaseOptions(
+    connectTimeout: 60000,
+    receiveTimeout: 60000,
+    baseUrl: AppUrl.BASE_URL,
+    responseType: ResponseType.json
+  ))
+    ..interceptors.add(InterceptorsWrapper(onRequest: (RequestOptions request) {
+      print('正在 request');
+      return request;
+    }, onResponse: (Response response) {
+      print('正在 response');
+      return response;
+    }, onError: (DioError e) {
+      print('出错了');
+      return e;
+    }));
 
-  static HttpUtils get instance => _getInstance();
-  static HttpUtils _instance;
-
-  HttpUtils._internal() {
-    // 初始化
-    mDio = new Dio(); // 使用默认配置
-
-// 配置dio实例
-    mDio.options.baseUrl = "https://www.xx.com/api";
-    mDio.options.connectTimeout = 5000; //5s
-    mDio.options.receiveTimeout = 3000;
+  static _proxyClient() {
+    (mDio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.findProxy = (uri) {
+        //proxy all request to localhost:8888
+        // android emuldator ip = 10.0.2.2
+        return "PROXY 10.0.2.2:8888";
+      };
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+    };
   }
 
-  static HttpUtils _getInstance() {
-    if (_instance == null) {
-      _instance = new HttpUtils._internal();
-    }
-    return _instance;
+  static Future<Map> get(
+      String url, {
+        Map<String, dynamic> params,
+      }) async {
+    //_proxyClient();
+    Response<Map> response = await mDio.get<Map>(
+      url,
+      queryParameters: params,
+    );
+    return response.data;
   }
 
-
-  static sendReq() async {
-    Response response;
-
-    response = await mDio.get("/test?id=12&name=wendu");
-    print(response.data.toString());
-// 请求参数也可以通过对象传递，上面的代码等同于：
-    response =
-    await mDio.get("/test", queryParameters: {"id": 12, "name": "wendu"});
-    print(response.data.toString());
+  static Future<Map> post(
+      String url, {
+        Map<String, dynamic> data,
+        Map<String, dynamic> params,
+        Options options,
+      }) async {
+   // _proxyClient();
+    Response<Map> response = await mDio.post<Map>(
+      url,
+      data: data,
+      queryParameters: params,
+      options: options,
+    );
+    return response.data;
   }
 }
