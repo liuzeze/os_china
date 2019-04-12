@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/bean/my_infor_data.dart';
 import 'package:flutter_app/http/request_api.dart';
 import 'package:flutter_app/ui/page/login_webview.dart';
+import 'package:flutter_app/ui/page/my_infor_detail.dart';
 import 'package:flutter_app/utils/config_utils.dart';
 import 'package:flutter_app/utils/data_utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:page_transition/page_transition.dart';
 
 class MyHeadwidget extends StatefulWidget {
   @override
@@ -11,18 +14,45 @@ class MyHeadwidget extends StatefulWidget {
 }
 
 class _MyHeadwidgetState extends State<MyHeadwidget> {
+  String _userName = '点击登录';
+  String _userAvatar;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _login();
+    DataUtils.getUserName().then((s) {
+      if (s != null) {
+        _userName = s;
+        if (mounted) {
+          setState(() {});
+        }
+      }
+    });
+    DataUtils.getUserAvatar().then((s) {
+      if (s != null) {
+        _userAvatar = s;
+        if (mounted) {
+          setState(() {});
+        }
+      }
+    });
+  }
+
   void _login() {
-    RequestApi.getOpenapiUser().then((map) {
-
-      Fluttertoast.showToast(msg: map.toString());
-
+    RequestApi.getOpenapiUser().then((loginInfor) {
+      setState(() {
+        _userName = loginInfor.name;
+        _userAvatar = loginInfor.avatar;
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeUtils.px_350,
+      height: SizeUtils.px_300,
       color: Color(ColorUtils.c_63ca6c),
       child: Center(
         child: Column(
@@ -31,25 +61,26 @@ class _MyHeadwidgetState extends State<MyHeadwidget> {
           children: <Widget>[
             GestureDetector(
               onTap: () {
-                DataUtils.isLogin().then((b){
+                DataUtils.isLogin().then((b) {
                   if (b) {
-                    _login();
-                  }else{
-                    Navigator.push<String>(context,
-                        MaterialPageRoute(builder: (context) {
-                          return LoginWebView();
-                        })).then((statue) {
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            child: MyInforDetail(),
+                            type: PageTransitionType.rightToLeftWithFade));
+                  } else {
+                    Navigator.push(
+                            context,
+                            PageTransition(
+                                type: PageTransitionType.rightToLeftWithFade,
+                                child: LoginWebView()))
+                        .then((statue) {
                       if (statue == "success") {
-
                         _login();
                       }
                     });
                   }
-
                 });
-
-
-
               },
               child: Container(
                 width: SizeUtils.px_100,
@@ -62,12 +93,14 @@ class _MyHeadwidgetState extends State<MyHeadwidget> {
                     shape: BoxShape.circle,
                     image: DecorationImage(
                         fit: BoxFit.cover,
-                        image:
-                            AssetImage('assets/images/ic_avatar_default.png'))),
+                        image: _userAvatar != null
+                            ? NetworkImage(_userAvatar)
+                            : AssetImage(
+                                'assets/images/ic_avatar_default.png'))),
               ),
             ),
             Text(
-              '名字',
+              _userName,
               style: TextStyle(color: Color(ColorUtils.c_ffffff)),
             )
           ],

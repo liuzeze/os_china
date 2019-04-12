@@ -16,7 +16,7 @@ class HttpUtils {
       print('正在 request==${request.uri}');
       return request;
     }, onResponse: (Response response) {
-      print('正在 response');
+      print('正在 response==${response.data}');
       return response;
     }, onError: (DioError e) {
       print('出错了');

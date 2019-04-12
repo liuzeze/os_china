@@ -8,6 +8,7 @@ class ColorUtils {
   static const c_666666 = 0xff666666;
   static const c_999999 = 0xff999999;
   static const c_cccccc = 0xffcccccc;
+  static const c_333333 = 0xff333333;
 }
 
 class SizeUtils {

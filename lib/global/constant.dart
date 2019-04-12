@@ -10,5 +10,6 @@ class AppUrl {
   static const String OAUTH2_AUTHORIZE = '/action/oauth2/authorize';
   static const String OAUTH2_TOKEN = '/action/openapi/token';
   static const String OPENAPI_USER  = '/action/openapi/user';
+  static const String MY_INFORMATION  = '/action/openapi/my_information';
 }
 

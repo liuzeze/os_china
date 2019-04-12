@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/ui/page/my_head_view.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class My extends StatefulWidget {
   @override
@@ -33,7 +34,9 @@ class _MyState extends State<My> {
           index -= 1;
           return ListTile(
             title: Text(myTitle[index]),
-            onTap: () {},
+            onTap: () {
+              Fluttertoast.showToast(msg: myTitle[index]);
+            },
             trailing: Icon(Icons.arrow_forward_ios),
             leading: Icon(Icons.contact_mail),
           );

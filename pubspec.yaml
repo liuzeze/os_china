@@ -22,8 +22,6 @@ dependencies:
   fluttertoast: ^3.0.3
   #sp存储
   shared_preferences: ^0.5.2
-  #rxdart
-  rxdart: ^0.21.0
 
 
 dev_dependencies:

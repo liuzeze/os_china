@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_app/bean/my_infor_data.dart';
 import 'package:flutter_app/global/constant.dart';
 import 'package:flutter_app/http/HttpUtils.dart';
 import 'package:flutter_app/utils/data_utils.dart';
@@ -20,14 +21,36 @@ class RequestApi {
   }
 
   /// 获取登陆信息
-  static Future<Map<String, dynamic>> getOpenapiUser() async {
+  static Future<LoginInfor> getOpenapiUser() async {
     return await DataUtils.getToken().then((token) {
       return {
         "access_token": token,
         "dataType": 'json',
       };
     }).then((map) async {
-      return await HttpUtils.get(AppUrl.OPENAPI_USER, params: map);
+      return await HttpUtils.get(AppUrl.OPENAPI_USER, params: map).then((map) {
+        var loginInfor = LoginInfor.fromJson(map);
+        DataUtils.saveLoginInfor(loginInfor);
+        return loginInfor;
+      });
+    });
+  }
+
+  /// 获取用户详情
+  static Future<MyInformation> getUserInfor() async {
+    return await DataUtils.getToken().then((token) {
+      return {
+        "access_token": token,
+        "dataType": 'json',
+      };
+    }).then((map) async {
+      return await HttpUtils.get(AppUrl.MY_INFORMATION, params: map)
+          .then((map) {
+        var loginInfor = MyInformation.fromJson(map);
+        return loginInfor;
+      }).catchError((e) {
+        Fluttertoast.showToast(msg: e.toString());
+      });
     });
   }
 }
