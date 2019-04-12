@@ -25,6 +25,21 @@ class DataUtils {
       ..setInt(EXPIRES_IN, map[EXPIRES_IN] + currentSecond);
   }
 
+  static Future<bool> clearLoginInfor() async {
+    SharedPreferences sp = await SharedPreferences.getInstance();
+      sp
+      ..setString(ACCESS_TOKEN, "")
+      ..setString(REFRESH_TOKEN, "")
+      ..setInt(UID, -1)
+      ..setString(TOKEN_TYPE, "")
+      ..setInt(EXPIRES_IN, -1)
+      ..setString(USER_NAME, '')
+      ..setString(USER_AVATAR, '')
+      ..setInt(USER_ID, -1);
+
+    return true;
+  }
+
   static Future<String> getToken() async {
     SharedPreferences sp = await SharedPreferences.getInstance();
 

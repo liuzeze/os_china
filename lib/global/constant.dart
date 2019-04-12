@@ -11,5 +11,9 @@ class AppUrl {
   static const String OAUTH2_TOKEN = '/action/openapi/token';
   static const String OPENAPI_USER  = '/action/openapi/user';
   static const String MY_INFORMATION  = '/action/openapi/my_information';
+  static const String NEWS_LIST  = '/action/openapi/news_list';
+  static const String NEWS_DETAIL  = '/action/openapi/news_detail';
+  static const String POST_LIST  = '/action/openapi/post_list';
+  static const String POST_DETAIL  = '/action/openapi/post_detail';
 }
 

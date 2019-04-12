@@ -62,13 +62,7 @@ class _HomePagerState extends State<HomePager> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        //状态栏字体颜色
-        brightness: Brightness.light,
-        title: Text(
-          _navigationText[_currenntIndex],
-        ),
-      ),
+
       body: PageView.builder(
           physics: NeverScrollableScrollPhysics(),
           controller: _pageController,
@@ -82,6 +76,7 @@ class _HomePagerState extends State<HomePager> {
             return _pageViews[index];
           }),
       bottomNavigationBar: BottomNavigationBar(
+        elevation: 20,
         currentIndex: _currenntIndex,
         fixedColor: Color(ColorUtils.c_63ca6c),
         type: BottomNavigationBarType.fixed,

@@ -27,6 +27,7 @@ class _MyState extends State<My> {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      padding: EdgeInsets.only(top: 0.0),
       itemBuilder: (BuildContext context, int index) {
         if (index == 0) {
           return MyHeadwidget();

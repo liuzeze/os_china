@@ -23,7 +23,7 @@ class _MyHeadwidgetState extends State<MyHeadwidget> {
     super.initState();
     _login();
     DataUtils.getUserName().then((s) {
-      if (s != null) {
+      if (s != null&&s.isNotEmpty) {
         _userName = s;
         if (mounted) {
           setState(() {});
@@ -31,7 +31,7 @@ class _MyHeadwidgetState extends State<MyHeadwidget> {
       }
     });
     DataUtils.getUserAvatar().then((s) {
-      if (s != null) {
+      if (s != null&&s.isNotEmpty) {
         _userAvatar = s;
         if (mounted) {
           setState(() {});
@@ -42,17 +42,20 @@ class _MyHeadwidgetState extends State<MyHeadwidget> {
 
   void _login() {
     RequestApi.getOpenapiUser().then((loginInfor) {
-      setState(() {
-        _userName = loginInfor.name;
-        _userAvatar = loginInfor.avatar;
-      });
+      if (mounted) {
+        setState(() {
+            _userName = loginInfor.name;
+            _userAvatar = loginInfor.avatar;
+
+        });
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeUtils.px_300,
+      height: SizeUtils.px_400,
       color: Color(ColorUtils.c_63ca6c),
       child: Center(
         child: Column(
@@ -64,10 +67,20 @@ class _MyHeadwidgetState extends State<MyHeadwidget> {
                 DataUtils.isLogin().then((b) {
                   if (b) {
                     Navigator.push(
-                        context,
-                        PageTransition(
-                            child: MyInforDetail(),
-                            type: PageTransitionType.rightToLeftWithFade));
+                            context,
+                            PageTransition(
+                                child: MyInforDetail(),
+                                type: PageTransitionType.rightToLeftWithFade))
+                        .then((b) {
+                      if (b) {
+                        if (mounted) {
+                          setState(() {
+                            _userName = '';
+                            _userAvatar = '';
+                          });
+                        }
+                      }
+                    });
                   } else {
                     Navigator.push(
                             context,

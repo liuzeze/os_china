@@ -22,6 +22,9 @@ dependencies:
   fluttertoast: ^3.0.3
   #sp存储
   shared_preferences: ^0.5.2
+  #dialog
+  progress_dialog: ^1.0.7
+
 
 
 dev_dependencies:
