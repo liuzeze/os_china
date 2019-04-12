@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_app/bean/WenDaDetail.dart';
+import 'package:flutter_app/bean/message_list.dart';
 import 'package:flutter_app/bean/my_infor_data.dart';
 import 'package:flutter_app/bean/news_detail.dart';
 import 'package:flutter_app/bean/news_list.dart';
@@ -127,6 +128,23 @@ class RequestApi {
     }).then((map) async {
       return await HttpUtils.get(AppUrl.TWEET_LIST, params: map).then((map) {
         return TweetListBean.fromJson(map).tweetlist;
+      }).catchError((e) {
+        Fluttertoast.showToast(msg: e.toString());
+      });
+    });
+  }
+ /// 获取动弹列表
+  static Future<List<MessageList>> getessageList(int pageNum) async {
+    return await DataUtils.getToken().then((token) {
+      return {
+        "access_token": token,
+        "pageIndex": pageNum,
+        "pageSize": 20,
+        "dataType": 'json',
+      };
+    }).then((map) async {
+      return await HttpUtils.get(AppUrl.MESSAGE_LIST, params: map).then((map) {
+        return MessageBean.fromJson(map).messageList;
       }).catchError((e) {
         Fluttertoast.showToast(msg: e.toString());
       });

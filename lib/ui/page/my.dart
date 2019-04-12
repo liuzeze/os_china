@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/ui/page/my_head_view.dart';
+import 'package:flutter_app/utils/data_utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class My extends StatefulWidget {
@@ -36,6 +37,11 @@ class _MyState extends State<My> {
           return ListTile(
             title: Text(myTitle[index]),
             onTap: () {
+              DataUtils.isLogin().then((b) {
+                if (b) {
+
+                } else {}
+              });
               Fluttertoast.showToast(msg: myTitle[index]);
             },
             trailing: Icon(Icons.arrow_forward_ios),

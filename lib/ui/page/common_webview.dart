@@ -47,8 +47,7 @@ class _WebViewPageState extends State<WebViewPage> {
 
   List<Widget> appBarTitle() {
     var list = <Widget>[
-      Container(
-        width: SizeUtils.px_400,
+      Expanded(
         child: Text(
           widget.titleName,
           maxLines: 1,

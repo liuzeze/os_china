@@ -118,10 +118,9 @@ String body="";
             ),
           ),
           SizedBox(
-            width: SizeUtils.px_10,
+            width: SizeUtils.px_20,
           ),
-          Container(
-            width: ScreenUtil.instance.screenWidth-SizeUtils.px_75-SizeUtils.px_95,
+          Expanded(
             child: Column(
 
               crossAxisAlignment: CrossAxisAlignment.start,
