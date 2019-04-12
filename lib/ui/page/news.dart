@@ -41,6 +41,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
         leading: null,
         centerTitle: true,
         title: Text('资讯'),
+        automaticallyImplyLeading: false,
         bottom: TabBar(
           isScrollable: true,
           controller: _tabController,

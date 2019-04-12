@@ -15,5 +15,6 @@ class AppUrl {
   static const String NEWS_DETAIL  = '/action/openapi/news_detail';
   static const String POST_LIST  = '/action/openapi/post_list';
   static const String POST_DETAIL  = '/action/openapi/post_detail';
+  static const String TWEET_LIST  = '/action/openapi/tweet_list';
 }
 
