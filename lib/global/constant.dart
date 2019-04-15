@@ -17,5 +17,11 @@ class AppUrl {
   static const String POST_DETAIL  = '/action/openapi/post_detail';
   static const String TWEET_LIST  = '/action/openapi/tweet_list';
   static const String MESSAGE_LIST  = '/action/openapi/message_list';
+  static const String TWEET_DETAIL  = '/action/openapi/tweet_detail';
+  static const String COMMENT_LIST  = '/action/openapi/comment_list';
+  static const String COMMENT_PUB  = '/action/openapi/comment_pub';
+  static const String FAVORITE_ADD  = '/action/openapi/favorite_add';
+  static const String FAVORITE_REMOVE  = '/action/openapi/favorite_remove';
+  static const String FAVORITE_LIST  = '/action/openapi/favorite_list';
 }
 

@@ -7,12 +7,14 @@ import 'package:flutter_app/bean/tweet_list.dart';
 import 'package:flutter_app/bean/wenda_list.dart';
 import 'package:flutter_app/http/request_api.dart';
 import 'package:flutter_app/ui/page/common_webview.dart';
+import 'package:flutter_app/ui/page/tweet_detail.dart';
 import 'package:flutter_app/utils/config_utils.dart';
 import 'package:flutter_app/utils/screen_utils.dart';
+import 'package:flutter_app/utils/share_utils.dart';
 import 'package:flutter_app/widget/banner.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class Tweet extends StatefulWidget {
   @override
@@ -23,6 +25,7 @@ class _TweetState extends State<Tweet> with SingleTickerProviderStateMixin {
   List<Tweetlist> _tweetList = [];
   int _pageNum = 1;
   ScrollController _scrollController;
+  TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
@@ -83,22 +86,13 @@ class _TweetState extends State<Tweet> with SingleTickerProviderStateMixin {
               var bean = _tweetList[index];
               return GestureDetector(
                   onTap: () {
-                    RequestApi.getWDDetail(bean.id).then((bean) {
-                      body = bean.body;
-                      if (mounted) {
-                        setState(() {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: WebViewPage(
-                                    bean.url,
-                                    titleName: bean.title,
-                                  ),
-                                  type:
-                                      PageTransitionType.rightToLeftWithFade));
-                        });
-                      }
-                    });
+                    Navigator.push(
+                        context,
+                        PageTransition(
+                            child: TweetDetailWidget(
+                              bean.id,
+                            ),
+                            type: PageTransitionType.rightToLeftWithFade));
                   },
                   child: buildItemColumn(bean));
             }
@@ -182,9 +176,20 @@ class _TweetState extends State<Tweet> with SingleTickerProviderStateMixin {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              buildRow(Icons.share, '转发'),
-              buildRow(Icons.comment, '${bean.commentCount}'),
-              buildRow(Icons.touch_app, '赞'),
+              GestureDetector(
+                  onTap: () {
+                    ShareExtend.share("${bean?.body}", 'text');
+                  },
+                  child: buildRow(Icons.share, '转发')),
+              GestureDetector(
+                  onTap: () {
+                    //弹框
+
+                    showAlertDialog(context, bean);
+                  },
+                  child: buildRow(Icons.comment, '${bean.commentCount}')),
+              GestureDetector(
+                  onTap: () {}, child: buildRow(Icons.touch_app, '赞')),
             ],
           )
         ],
@@ -212,6 +217,79 @@ class _TweetState extends State<Tweet> with SingleTickerProviderStateMixin {
           ),
         ),
       ],
+    );
+  }
+
+  void showAlertDialog(BuildContext context, Tweetlist bean) {
+    showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return Dialog(
+            child: Container(
+          padding: EdgeInsets.all(15),
+          height: SizeUtils.px_400,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                '请输入评论内容',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              TextField(
+                controller: _controller,
+                keyboardType: TextInputType.number,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(10.0),
+                  labelText: '请输入你的评论内容',
+                  helperText: '请输入你的评论内容',
+                ),
+                autofocus: false,
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: RaisedButton(
+                        child: Text('提交'),
+                        onPressed: () {
+                          if (_controller?.text?.length > 0) {
+                            RequestApi.getPubCommont(
+                                    bean?.id, _controller?.text)
+                                .then((map) {
+                              if (map['error'] == '200') {
+                                _controller.clear();
+                                Navigator.of(context).pop();
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg: map['error_description'] ?? '错误');
+                              }
+                            });
+                          } else {
+                            Fluttertoast.showToast(msg: '请输入内容');
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: RaisedButton(
+                        child: Text('取消'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ));
+      },
     );
   }
 }

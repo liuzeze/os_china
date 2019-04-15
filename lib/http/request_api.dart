@@ -1,10 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter_app/bean/WenDaDetail.dart';
+import 'package:flutter_app/bean/commont_lists.dart';
+import 'package:flutter_app/bean/favorite_list.dart';
 import 'package:flutter_app/bean/message_list.dart';
 import 'package:flutter_app/bean/my_infor_data.dart';
 import 'package:flutter_app/bean/news_detail.dart';
 import 'package:flutter_app/bean/news_list.dart';
+import 'package:flutter_app/bean/tweet_detail.dart';
 import 'package:flutter_app/bean/tweet_list.dart';
 import 'package:flutter_app/bean/wenda_list.dart';
 import 'package:flutter_app/global/constant.dart';
@@ -96,6 +99,7 @@ class RequestApi {
       });
     });
   }
+
   /// 获取问答列表
   static Future<List<PostList>> getWDList(int pageNum) async {
     return await DataUtils.getToken().then((token) {
@@ -107,14 +111,14 @@ class RequestApi {
         "dataType": 'json',
       };
     }).then((map) async {
-      return await HttpUtils.get(AppUrl.POST_LIST, params: map)
-          .then((map) {
-        return  WenDaList.fromJson(map).postList;
+      return await HttpUtils.get(AppUrl.POST_LIST, params: map).then((map) {
+        return WenDaList.fromJson(map).postList;
       }).catchError((e) {
         Fluttertoast.showToast(msg: e.toString());
       });
     });
   }
+
   /// 获取动弹列表
   static Future<List<Tweetlist>> getTweetList(int pageNum) async {
     return await DataUtils.getToken().then((token) {
@@ -133,8 +137,59 @@ class RequestApi {
       });
     });
   }
- /// 获取动弹列表
-  static Future<List<MessageList>> getessageList(int pageNum) async {
+
+  /// 获取动弹列表
+  static Future<List<CommentList>> getCommontList(int id, int pageNum) async {
+    return await DataUtils.getToken().then((token) {
+      return {
+//        'id': id,
+        'id': -1,
+        "access_token": token,
+        "catalog": 3,
+        "pageIndex": pageNum,
+        "pageSize": 20,
+        "dataType": 'json',
+      };
+    }).then((map) async {
+      return await HttpUtils.get(AppUrl.COMMENT_LIST, params: map).then((map) {
+        return CommontListBean.fromJson(map).commentList;
+      }).catchError((e) {
+        Fluttertoast.showToast(msg: e.toString());
+      });
+    });
+  }
+
+  /// 获取动弹列表
+  static Future<Map<String, dynamic>> getPubCommont(int id, String text) async {
+    return await DataUtils.getToken().then((token) {
+      return {
+        'id': id,
+        "access_token": token,
+        "catalog": 3,
+        "content": text,
+      };
+    }).then((map) async {
+      return await HttpUtils.get(AppUrl.COMMENT_PUB, params: map);
+    });
+  }
+
+  /// 获取动弹列表
+  static Future<Map<String, dynamic>> getAddFavorite(
+      int id, int favorite) async {
+    return await DataUtils.getToken().then((token) {
+      return {
+        'id': id,
+        "access_token": token,
+        "type": 4,
+        "dataType": 'json',
+      };
+    }).then((map) async {
+      return await HttpUtils.get(favorite==0?AppUrl.FAVORITE_ADD:AppUrl.FAVORITE_REMOVE, params: map);
+    });
+  }
+
+  /// 获取动弹列表
+  static Future<List<MessageList>> getMessageList(int pageNum) async {
     return await DataUtils.getToken().then((token) {
       return {
         "access_token": token,
@@ -145,6 +200,24 @@ class RequestApi {
     }).then((map) async {
       return await HttpUtils.get(AppUrl.MESSAGE_LIST, params: map).then((map) {
         return MessageBean.fromJson(map).messageList;
+      }).catchError((e) {
+        Fluttertoast.showToast(msg: e.toString());
+      });
+    });
+  }
+  /// 获取动弹列表
+  static Future<List<FavoriteList>> getFavoriteList(int pageNum) async {
+    return await DataUtils.getToken().then((token) {
+      return {
+        "access_token": token,
+        "pageIndex": pageNum,
+        "pageSize": 20,
+        "dataType": 'json',
+        "type": 0,
+      };
+    }).then((map) async {
+      return await HttpUtils.get(AppUrl.FAVORITE_LIST, params: map).then((map) {
+        return FavoriteListBean.fromJson(map).favoriteList;
       }).catchError((e) {
         Fluttertoast.showToast(msg: e.toString());
       });
@@ -162,6 +235,23 @@ class RequestApi {
     }).then((map) async {
       return await HttpUtils.get(AppUrl.POST_DETAIL, params: map).then((map) {
         return WenDaDetail.fromJson(map);
+      }).catchError((e) {
+        Fluttertoast.showToast(msg: e.toString());
+      });
+    });
+  }
+
+  /// 获取问答详情
+  static Future<TweetDetailBean> getTweetDetail(int newsId) async {
+    return await DataUtils.getToken().then((token) {
+      return {
+        "access_token": token,
+        "id": newsId,
+        "dataType": 'json',
+      };
+    }).then((map) async {
+      return await HttpUtils.get(AppUrl.TWEET_DETAIL, params: map).then((map) {
+        return TweetDetailBean.fromJson(map);
       }).catchError((e) {
         Fluttertoast.showToast(msg: e.toString());
       });

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/ui/page/favorite_list.dart';
+import 'package:flutter_app/ui/page/message_list.dart';
 import 'package:flutter_app/ui/page/my_head_view.dart';
 import 'package:flutter_app/utils/data_utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:page_transition/page_transition.dart';
 
 class My extends StatefulWidget {
   @override
@@ -15,6 +18,7 @@ class _MyState extends State<My> {
   void initState() {
     super.initState();
     myTitle = [
+      '收藏列表',
       '我的消息',
       '阅读记录',
       '我的博客',
@@ -39,10 +43,27 @@ class _MyState extends State<My> {
             onTap: () {
               DataUtils.isLogin().then((b) {
                 if (b) {
-
+                  switch (index) {
+                    case 0:
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              child: FavoriteListsWidget(),
+                              type: PageTransitionType.rightToLeftWithFade));
+                      break;
+                    case 1:
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              child: MessageListsWidget(),
+                              type: PageTransitionType.rightToLeftWithFade));
+                      break;
+                    default:
+                      Fluttertoast.showToast(msg: myTitle[index]);
+                      break;
+                  }
                 } else {}
               });
-              Fluttertoast.showToast(msg: myTitle[index]);
             },
             trailing: Icon(Icons.arrow_forward_ios),
             leading: Icon(Icons.contact_mail),

@@ -91,6 +91,8 @@ class _NewsChildState extends State<NewsChild>
                             PageTransition(
                                 child: WebViewPage(
                                   bean.url,
+                                  id:bean.id,
+                                  favorite:bean.favorite,
                                   titleName: bean.title,
                                 ),
                                 type: PageTransitionType.rightToLeftWithFade));
