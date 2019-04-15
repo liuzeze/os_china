@@ -8,8 +8,6 @@ import 'package:flutter_app/ui/page/tweet.dart';
 import 'package:flutter_app/utils/config_utils.dart';
 import 'package:flutter_app/utils/flt_toast.dart';
 
-
-
 class HomePager extends StatefulWidget {
   @override
   _HomePagerState createState() => _HomePagerState();
@@ -86,7 +84,9 @@ class _HomePagerState extends State<HomePager> {
             .toList(),
         onTap: (index) {
           setState(() {
-            FltToast.showToast("调用原生的toast");
+            FltToast.showToast("先登录").then((b) {
+              print(b);
+            });
             _currenntIndex = index;
           });
           _pageController.jumpToPage(_currenntIndex);
