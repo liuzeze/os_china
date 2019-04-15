@@ -6,7 +6,9 @@ import 'package:flutter_app/ui/drawer/my_drawer.dart';
 import 'package:flutter_app/ui/page/news.dart';
 import 'package:flutter_app/ui/page/tweet.dart';
 import 'package:flutter_app/utils/config_utils.dart';
-import 'package:flutter_app/utils/screen_utils.dart';
+import 'package:flutter_app/utils/flt_toast.dart';
+
+
 
 class HomePager extends StatefulWidget {
   @override
@@ -62,7 +64,6 @@ class _HomePagerState extends State<HomePager> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: PageView.builder(
           physics: NeverScrollableScrollPhysics(),
           controller: _pageController,
@@ -85,6 +86,7 @@ class _HomePagerState extends State<HomePager> {
             .toList(),
         onTap: (index) {
           setState(() {
+            FltToast.showToast("调用原生的toast");
             _currenntIndex = index;
           });
           _pageController.jumpToPage(_currenntIndex);

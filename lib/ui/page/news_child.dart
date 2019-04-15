@@ -53,7 +53,9 @@ class _NewsChildState extends State<NewsChild>
         if (pageNum == 1) {
           _newsList.clear();
         }
-        _newsList.addAll(newslists);
+        if (newslists != null) {
+          _newsList.addAll(newslists);
+        }
       });
       _pageNum += 1;
     });
@@ -91,8 +93,8 @@ class _NewsChildState extends State<NewsChild>
                             PageTransition(
                                 child: WebViewPage(
                                   bean.url,
-                                  id:bean.id,
-                                  favorite:bean.favorite,
+                                  id: bean.id,
+                                  favorite: bean.favorite,
                                   titleName: bean.title,
                                 ),
                                 type: PageTransitionType.rightToLeftWithFade));
