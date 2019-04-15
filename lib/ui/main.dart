@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
       title: "开源中国",
       theme: ThemeData(primaryColor: Color(ColorUtils.c_ffffff)),
       home: HomePager(),

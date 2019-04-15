@@ -71,7 +71,7 @@ class _MyState extends State<My> {
         }
       },
       separatorBuilder: (BuildContext context, int index) {
-        return Divider();
+        return Divider(height: 1,);
       },
       itemCount: myTitle.length + 1,
     );

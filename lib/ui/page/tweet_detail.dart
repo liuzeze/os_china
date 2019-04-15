@@ -51,7 +51,7 @@ class _TweetDetailWidgetState extends State<TweetDetailWidget> {
                 shape: BoxShape.circle,
                 image: DecorationImage(
                   fit: BoxFit.fill,
-                  image: NetworkImage(_tweetDetailBean?.portrait??''),
+                  image: NetworkImage(_tweetDetailBean?.portrait ?? ''),
                 ),
               ),
             ),
@@ -87,18 +87,27 @@ class _TweetDetailWidgetState extends State<TweetDetailWidget> {
 
     list.add(Padding(
       padding: const EdgeInsets.only(left: 15, right: 15),
-      child: Text(_tweetDetailBean?.body??""),
+      child: Text(_tweetDetailBean?.body ?? ""),
     ));
 
     if (_tweetDetailBean?.imgSmall != null) {
       list.add(Container(
         alignment: Alignment.centerLeft,
         padding: const EdgeInsets.all(15.0),
-        child: Image.network(_tweetDetailBean?.imgSmall,height: SizeUtils.px_300,width: SizeUtils.px_300,),
+        child: Image.network(
+          _tweetDetailBean?.imgSmall,
+          height: SizeUtils.px_300,
+          width: SizeUtils.px_300,
+        ),
       ));
     }
 
-    list.add(Divider());
+    list.add(SizedBox(
+      height: 10,
+    ));
+    list.add(Divider(
+      height: 0,
+    ));
     list.add(Container(
       padding: EdgeInsets.all(8),
       color: Color(ColorUtils.c_cccccc),
@@ -108,15 +117,20 @@ class _TweetDetailWidgetState extends State<TweetDetailWidget> {
             children: <Widget>[
               Expanded(child: Center(child: Text('赞(0)'))),
               Expanded(
-                  child: Center(
-                      child: Text('评论(${_tweetDetailBean?.commentCount})')))
+                child: Center(
+                  child: Text('评论(${_tweetDetailBean?.commentCount})'),
+                ),
+              ),
             ],
           ),
         ],
       ),
     ));
-    list.add(Divider());
-    list.add(CommontListsWidget(_tweetDetailBean?.id,_tweetDetailBean?.commentCount));
+    list.add(Divider(
+      height: 0,
+    ));
+    list.add(CommontListsWidget(
+        _tweetDetailBean?.id, _tweetDetailBean?.commentCount));
 
     return list;
   }

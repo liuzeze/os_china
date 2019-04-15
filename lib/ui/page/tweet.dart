@@ -1,18 +1,10 @@
-import 'package:flutter/gestures.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
-import 'package:flutter_app/bean/news_list.dart' show Newslist;
 import 'package:flutter_app/bean/tweet_list.dart';
-import 'package:flutter_app/bean/wenda_list.dart';
 import 'package:flutter_app/http/request_api.dart';
-import 'package:flutter_app/ui/page/common_webview.dart';
 import 'package:flutter_app/ui/page/tweet_detail.dart';
 import 'package:flutter_app/utils/config_utils.dart';
-import 'package:flutter_app/utils/screen_utils.dart';
 import 'package:flutter_app/utils/share_utils.dart';
-import 'package:flutter_app/widget/banner.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -178,13 +170,12 @@ class _TweetState extends State<Tweet> with SingleTickerProviderStateMixin {
             children: <Widget>[
               GestureDetector(
                   onTap: () {
-                    ShareExtend.share("${bean?.body}", 'text');
+                    ShareExtend.share("${bean.body}", 'text');
                   },
                   child: buildRow(Icons.share, '转发')),
               GestureDetector(
                   onTap: () {
                     //弹框
-
                     showAlertDialog(context, bean);
                   },
                   child: buildRow(Icons.comment, '${bean.commentCount}')),

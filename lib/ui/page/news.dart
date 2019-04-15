@@ -43,8 +43,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
         centerTitle: true,
         automaticallyImplyLeading: false,
         title: Container(
-          padding:
-              EdgeInsets.only(top: ScreenUtil.instance.statusBarHeight - 10),
+
           alignment: Alignment.bottomCenter,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -52,7 +51,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
             children: <Widget>[
               Text('资讯'),
               SizedBox(
-                height: 10,
+                height: 9,
               ),
               Divider(
                 height: 1,
