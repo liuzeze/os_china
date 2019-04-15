@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/ui/page/news_child.dart';
 import 'package:flutter_app/ui/page/news_wenda.dart';
 import 'package:flutter_app/utils/config_utils.dart';
+import 'package:flutter_app/utils/screen_utils.dart';
 import 'package:flutter_app/widget/banner.dart';
 
 class News extends StatefulWidget {
@@ -31,7 +32,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 6);
+    _tabController = TabController(vsync: this, length: 2);
   }
 
   @override
@@ -40,18 +41,31 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
       appBar: AppBar(
         leading: null,
         centerTitle: true,
-        title: Text('资讯'),
         automaticallyImplyLeading: false,
+        title: Container(
+          padding:
+              EdgeInsets.only(top: ScreenUtil.instance.statusBarHeight - 10),
+          alignment: Alignment.bottomCenter,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('资讯'),
+              SizedBox(
+                height: 10,
+              ),
+              Divider(
+                height: 1,
+              ),
+            ],
+          ),
+        ),
         bottom: TabBar(
           isScrollable: true,
           controller: _tabController,
           tabs: [
             Tab(text: "新闻"),
             Tab(text: "问答"),
-            Tab(text: "Tabs 3"),
-            Tab(text: "Tabs 4"),
-            Tab(text: "Tabs 5"),
-            Tab(text: "Tabs 6"),
           ],
         ),
       ),
