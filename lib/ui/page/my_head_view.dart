@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/bean/my_infor_data.dart';
+import 'package:flutter_app/eventbus/event_bus.dart';
+import 'package:flutter_app/eventbus/login_infor_event.dart';
 import 'package:flutter_app/http/request_api.dart';
 import 'package:flutter_app/ui/page/login_webview.dart';
 import 'package:flutter_app/ui/page/my_infor_detail.dart';
@@ -23,7 +25,7 @@ class _MyHeadwidgetState extends State<MyHeadwidget> {
     super.initState();
     _login();
     DataUtils.getUserName().then((s) {
-      if (s != null&&s.isNotEmpty) {
+      if (s != null && s.isNotEmpty) {
         _userName = s;
         if (mounted) {
           setState(() {});
@@ -31,7 +33,7 @@ class _MyHeadwidgetState extends State<MyHeadwidget> {
       }
     });
     DataUtils.getUserAvatar().then((s) {
-      if (s != null&&s.isNotEmpty) {
+      if (s != null && s.isNotEmpty) {
         _userAvatar = s;
         if (mounted) {
           setState(() {});
@@ -44,9 +46,8 @@ class _MyHeadwidgetState extends State<MyHeadwidget> {
     RequestApi.getOpenapiUser().then((loginInfor) {
       if (mounted) {
         setState(() {
-            _userName = loginInfor.name;
-            _userAvatar = loginInfor.avatar;
-
+          _userName = loginInfor.name;
+          _userAvatar = loginInfor.avatar;
         });
       }
     });
@@ -73,6 +74,7 @@ class _MyHeadwidgetState extends State<MyHeadwidget> {
                                 type: PageTransitionType.rightToLeftWithFade))
                         .then((b) {
                       if (b) {
+                        eventBus.fire(LogoEvent());
                         if (mounted) {
                           setState(() {
                             _userName = '';

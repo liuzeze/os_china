@@ -60,7 +60,7 @@ class _NewsState extends State<News> with SingleTickerProviderStateMixin {
           ),
         ),
         bottom: TabBar(
-          isScrollable: true,
+          //isScrollable: true,
           controller: _tabController,
           tabs: [
             Tab(text: "新闻"),

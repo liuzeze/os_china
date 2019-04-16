@@ -11,7 +11,8 @@ class WebViewPage extends StatefulWidget {
   int id;
   int favorite;
 
-  WebViewPage(this._url, {this.id, this.favorite, this.titleName = '开源中国'});
+  WebViewPage(this._url,
+      {this.id, this.favorite = -1, this.titleName = '开源中国'});
 
   @override
   _WebViewPageState createState() => _WebViewPageState();
@@ -62,18 +63,20 @@ class _WebViewPageState extends State<WebViewPage> {
     if (isLoading) {
       list.add(CupertinoActivityIndicator());
     }
-    list.add(GestureDetector(
-      child:
-          Icon(widget.favorite == 1 ? Icons.favorite : Icons.favorite_border),
-      onTap: () {
-        RequestApi.getAddFavorite(widget.id, widget.favorite).then((map) {
-          if (map['error'] == '200') {
-            widget.favorite == 1 ? widget.favorite = 0 : widget.favorite = 1;
-            setState(() {});
-          }
-        });
-      },
-    ));
+    if (widget.favorite != -1) {
+      list.add(GestureDetector(
+        child:
+            Icon(widget.favorite == 1 ? Icons.favorite : Icons.favorite_border),
+        onTap: () {
+          RequestApi.getAddFavorite(widget.id, widget.favorite).then((map) {
+            if (map['error'] == '200') {
+              widget.favorite == 1 ? widget.favorite = 0 : widget.favorite = 1;
+              setState(() {});
+            }
+          });
+        },
+      ));
+    }
     return list;
   }
 }

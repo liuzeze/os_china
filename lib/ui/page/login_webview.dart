@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/eventbus/event_bus.dart';
+import 'package:flutter_app/eventbus/login_infor_event.dart';
 import 'package:flutter_app/global/constant.dart';
 import 'package:flutter_app/http/HttpUtils.dart';
 import 'package:flutter_app/http/request_api.dart';
@@ -31,7 +33,8 @@ class _LoginWebViewState extends State<LoginWebView> {
         RequestApi.getOauth2Token(code).then((response) {
           DataUtils.saveTokenInfor(response);
           Navigator.pop(context, "success");
-          DataUtils.isLogin();
+          eventBus.fire(LoginEvent());
+
         }).catchError((e) {
           print('initState  = ===== '+e.toString());
         });

@@ -84,9 +84,6 @@ class _HomePagerState extends State<HomePager> {
             .toList(),
         onTap: (index) {
           setState(() {
-            FltToast.showToast("先登录").then((b) {
-              print(b);
-            });
             _currenntIndex = index;
           });
           _pageController.jumpToPage(_currenntIndex);

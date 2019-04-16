@@ -1,9 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/bean/tweet_list.dart';
+import 'package:flutter_app/eventbus/event_bus.dart';
+import 'package:flutter_app/eventbus/login_infor_event.dart';
 import 'package:flutter_app/http/request_api.dart';
+import 'package:flutter_app/ui/page/login_webview.dart';
 import 'package:flutter_app/ui/page/tweet_detail.dart';
 import 'package:flutter_app/utils/config_utils.dart';
+import 'package:flutter_app/utils/data_utils.dart';
 import 'package:flutter_app/utils/share_utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
@@ -18,10 +22,34 @@ class _TweetState extends State<Tweet> with SingleTickerProviderStateMixin {
   int _pageNum = 1;
   ScrollController _scrollController;
   TextEditingController _controller = TextEditingController();
+  bool _isLogin=false;
 
   @override
   void initState() {
     super.initState();
+    DataUtils.isLogin().then((b) {
+      if (mounted) {
+        setState(() {
+          _isLogin = b;
+        });
+      }
+    });
+    eventBus.on<LoginEvent>().listen((event) {
+      // All events are of type UserLoggedInEvent (or subtypes of it).
+      if (mounted) {
+        setState(() {
+          _isLogin = true;
+        });
+      }
+    });
+    eventBus.on<LogoEvent>().listen((event) {
+      // All events are of type UserLoggedInEvent (or subtypes of it).
+      if (mounted) {
+        setState(() {
+          _isLogin = false;
+        });
+      }
+    });
     _scrollController = ScrollController()
       ..addListener(() {
         if (_scrollController.position.pixels ==
@@ -58,48 +86,67 @@ class _TweetState extends State<Tweet> with SingleTickerProviderStateMixin {
           '动弹',
         ),
       ),
-      body: RefreshIndicator(
-        child: ListView.separated(
-          controller: _scrollController,
-          shrinkWrap: true,
-          itemCount: _tweetList.length + 1,
-          itemBuilder: (BuildContext context, int index) {
-            if (index == _tweetList.length) {
-              if (_tweetList.length == 0) {
-                return null;
-              }
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: CupertinoActivityIndicator(),
-                ),
-              );
-            } else {
-              var bean = _tweetList[index];
-              return GestureDetector(
-                  onTap: () {
+      body: _isLogin
+          ? RefreshIndicator(
+              child: ListView.separated(
+                controller: _scrollController,
+                shrinkWrap: true,
+                itemCount: _tweetList.length + 1,
+                itemBuilder: (BuildContext context, int index) {
+                  if (index == _tweetList.length) {
+                    if (_tweetList.length == 0) {
+                      return null;
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: CupertinoActivityIndicator(),
+                      ),
+                    );
+                  } else {
+                    var bean = _tweetList[index];
+                    return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              PageTransition(
+                                  child: TweetDetailWidget(
+                                    bean.id,
+                                  ),
+                                  type:
+                                      PageTransitionType.rightToLeftWithFade));
+                        },
+                        child: buildItemColumn(bean));
+                  }
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return Divider(
+                    color: Color(ColorUtils.c_666666),
+                  );
+                },
+              ),
+              onRefresh: () async {
+                _pageNum = 1;
+                await getWenDaList(_pageNum);
+              },
+            )
+          : Center(
+              child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
+                  color: Color(ColorUtils.c_666666),
+                  onPressed: () {
                     Navigator.push(
                         context,
                         PageTransition(
-                            child: TweetDetailWidget(
-                              bean.id,
-                            ),
-                            type: PageTransitionType.rightToLeftWithFade));
+                            type: PageTransitionType.rightToLeftWithFade,
+                            child: LoginWebView()));
                   },
-                  child: buildItemColumn(bean));
-            }
-          },
-          separatorBuilder: (BuildContext context, int index) {
-            return Divider(
-              color: Color(ColorUtils.c_666666),
-            );
-          },
-        ),
-        onRefresh: () async {
-          _pageNum = 1;
-          await getWenDaList(_pageNum);
-        },
-      ),
+                  child: Text(
+                    '登录',
+                    style: TextStyle(color: Color(ColorUtils.c_ffffff)),
+                  )),
+            ),
     );
   }
 

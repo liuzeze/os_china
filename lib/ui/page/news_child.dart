@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/bean/news_list.dart' show Newslist;
+import 'package:flutter_app/eventbus/event_bus.dart';
+import 'package:flutter_app/eventbus/login_infor_event.dart';
 import 'package:flutter_app/http/request_api.dart';
 import 'package:flutter_app/ui/page/common_webview.dart';
+import 'package:flutter_app/ui/page/login_webview.dart';
 import 'package:flutter_app/utils/config_utils.dart';
+import 'package:flutter_app/utils/data_utils.dart';
 import 'package:flutter_app/widget/banner.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:page_transition/page_transition.dart';
@@ -33,10 +37,34 @@ class _NewsChildState extends State<NewsChild>
   List<Newslist> _newsList = [];
   int _pageNum = 1;
   ScrollController _scrollController;
+  bool _login=false;
 
   @override
   void initState() {
     super.initState();
+    DataUtils.isLogin().then((b) {
+      if (mounted) {
+        setState(() {
+          _login = b;
+        });
+      }
+    });
+    eventBus.on<LoginEvent>().listen((event) {
+      // All events are of type UserLoggedInEvent (or subtypes of it).
+      if (mounted) {
+        setState(() {
+          _login = true;
+        });
+      }
+    });
+    eventBus.on<LogoEvent>().listen((event) {
+      // All events are of type UserLoggedInEvent (or subtypes of it).
+      if (mounted) {
+        setState(() {
+          _login = false;
+        });
+      }
+    });
     _scrollController = ScrollController()
       ..addListener(() {
         if (_scrollController.position.pixels ==
@@ -49,73 +77,94 @@ class _NewsChildState extends State<NewsChild>
 
   void getNewsList(int pageNum) {
     RequestApi.getNewsList(pageNum).then((newslists) {
-      setState(() {
-        if (pageNum == 1) {
-          _newsList.clear();
-        }
-        if (newslists != null) {
-          _newsList.addAll(newslists);
-        }
-      });
+      if (mounted) {
+        setState(() {
+          if (pageNum == 1) {
+            _newsList.clear();
+          }
+          if (newslists != null) {
+            _newsList.addAll(newslists);
+          }
+        });
+      }
       _pageNum += 1;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      child: ListView.separated(
-        controller: _scrollController,
-        shrinkWrap: true,
-        itemCount: _newsList.length + 2,
-        itemBuilder: (BuildContext context, int index) {
-          if (index == 0) {
-            return buildBannerView();
-          } else if (index == _newsList.length + 1) {
-            if (_newsList.length == 0) {
-              return null;
-            }
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: CupertinoActivityIndicator(),
-              ),
-            );
-          } else {
-            var bean = _newsList[index - 1];
-            return GestureDetector(
-                onTap: () {
-                  RequestApi.getNewsDetail(bean.id).then((bean) {
-                    if (mounted) {
-                      setState(() {
-                        Navigator.push(
-                            context,
-                            PageTransition(
-                                child: WebViewPage(
-                                  bean.url,
-                                  id: bean.id,
-                                  favorite: bean.favorite,
-                                  titleName: bean.title,
-                                ),
-                                type: PageTransitionType.rightToLeftWithFade));
-                      });
-                    }
-                  });
+    return _login
+        ? RefreshIndicator(
+            child: ListView.separated(
+              controller: _scrollController,
+              shrinkWrap: true,
+              itemCount: _newsList.length + 2,
+              itemBuilder: (BuildContext context, int index) {
+                if (index == 0) {
+                  return buildBannerView();
+                } else if (index == _newsList.length + 1) {
+                  if (_newsList.length == 0) {
+                    return null;
+                  }
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: CupertinoActivityIndicator(),
+                    ),
+                  );
+                } else {
+                  var bean = _newsList[index - 1];
+                  return GestureDetector(
+                      onTap: () {
+                        RequestApi.getNewsDetail(bean.id).then((bean) {
+                          if (mounted) {
+                            setState(() {
+                              Navigator.push(
+                                  context,
+                                  PageTransition(
+                                      child: WebViewPage(
+                                        bean.url,
+                                        id: bean.id,
+                                        favorite: bean.favorite,
+                                        titleName: bean.title,
+                                      ),
+                                      type: PageTransitionType
+                                          .rightToLeftWithFade));
+                            });
+                          }
+                        });
+                      },
+                      child: buildItemColumn(bean));
+                }
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return Divider(
+                  height: 1,
+                );
+              },
+            ),
+            onRefresh: () async {
+              _pageNum = 1;
+              await getNewsList(_pageNum);
+            },
+          )
+        : Center(
+            child: FlatButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15)),
+                color: Color(ColorUtils.c_666666),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.rightToLeftWithFade,
+                          child: LoginWebView()));
                 },
-                child: buildItemColumn(bean));
-          }
-        },
-        separatorBuilder: (BuildContext context, int index) {
-          return Divider(
-            height: 1,
+                child: Text(
+                  '登录',
+                  style: TextStyle(color: Color(ColorUtils.c_ffffff)),
+                )),
           );
-        },
-      ),
-      onRefresh: () async {
-        _pageNum = 1;
-        await getNewsList(_pageNum);
-      },
-    );
   }
 
   Widget buildItemColumn(Newslist bean) {
