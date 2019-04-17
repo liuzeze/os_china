@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/bean/tweet_detail.dart';
 import 'package:flutter_app/http/request_api.dart';
-import 'package:flutter_app/ui/page/commont_list.dart';
+import 'package:flutter_app/ui/tweet/commont_list.dart';
 import 'package:flutter_app/utils/config_utils.dart';
 
 class TweetDetailWidget extends StatefulWidget {

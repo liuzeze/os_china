@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/ui/page/common_webview.dart';
-import 'package:flutter_app/ui/page/sensor_page.dart';
+import 'package:flutter_app/ui/common_webview.dart';
+import 'package:flutter_app/ui/find/sensor_page.dart';
 import 'package:flutter_app/utils/flt_toast.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -11,7 +11,10 @@ class Find extends StatefulWidget {
   _FindState createState() => _FindState();
 }
 
-class _FindState extends State<Find> {
+class _FindState extends State<Find> with AutomaticKeepAliveClientMixin {
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
   List<IconData> _icon;
   List<String> _title;
 
@@ -74,7 +77,7 @@ class _FindState extends State<Find> {
                       break;
                     case 4:
                       BarcodeScanner.scan().then((s) {
-                        FltToast.showToast("扫描内容"+s);
+                        FltToast.showToast("扫描内容" + s);
                       });
                       break;
                     case 5:

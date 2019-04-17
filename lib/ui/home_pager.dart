@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/ui/page/bottom_navigation_bar_view.dart';
-import 'package:flutter_app/ui/page/find.dart';
-import 'package:flutter_app/ui/page/my.dart';
+import 'package:flutter_app/ui/bottom_navigation_bar_view.dart';
+import 'package:flutter_app/ui/find/find.dart';
+import 'package:flutter_app/ui/my/my.dart';
 import 'package:flutter_app/ui/drawer/my_drawer.dart';
-import 'package:flutter_app/ui/page/news.dart';
-import 'package:flutter_app/ui/page/tweet.dart';
+import 'package:flutter_app/ui/news/news.dart';
+import 'package:flutter_app/ui/tweet/tweet.dart';
 import 'package:flutter_app/utils/config_utils.dart';
 import 'package:flutter_app/utils/flt_toast.dart';
 

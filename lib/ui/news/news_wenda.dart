@@ -4,8 +4,8 @@ import 'package:flutter_app/bean/wenda_list.dart';
 import 'package:flutter_app/eventbus/event_bus.dart';
 import 'package:flutter_app/eventbus/login_infor_event.dart';
 import 'package:flutter_app/http/request_api.dart';
-import 'package:flutter_app/ui/page/common_webview.dart';
-import 'package:flutter_app/ui/page/login_webview.dart';
+import 'package:flutter_app/ui/common_webview.dart';
+import 'package:flutter_app/ui/my/login_webview.dart';
 import 'package:flutter_app/utils/config_utils.dart';
 import 'package:flutter_app/utils/data_utils.dart';
 import 'package:flutter_app/utils/screen_utils.dart';
@@ -19,7 +19,11 @@ class WenDaList extends StatefulWidget {
 }
 
 class _WenDaListState extends State<WenDaList>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+
   List<PostList> _wenDasList = [];
   int _pageNum = 1;
   ScrollController _scrollController;
@@ -34,14 +38,15 @@ class _WenDaListState extends State<WenDaList>
           getWenDaList(_pageNum);
         }
       });
-    getWenDaList(_pageNum);
-  }
 
-  void getWenDaList(int pageNum) {
     DataUtils.isLogin().then((b) {
       if (mounted) {
         setState(() {
           _isLogin = b;
+          if (_isLogin) {
+
+          getWenDaList(_pageNum);
+          }
         });
       }
     });
@@ -50,6 +55,7 @@ class _WenDaListState extends State<WenDaList>
       if (mounted) {
         setState(() {
           _isLogin = true;
+          getWenDaList(_pageNum);
         });
       }
     });
@@ -61,6 +67,9 @@ class _WenDaListState extends State<WenDaList>
         });
       }
     });
+  }
+
+  void getWenDaList(int pageNum) {
     RequestApi.getWDList(pageNum).then((newslists) {
       setState(() {
         if (pageNum == 1) {
@@ -73,79 +82,81 @@ class _WenDaListState extends State<WenDaList>
   }
 
   String body = "";
-  bool _isLogin=false;
+  bool _isLogin;
 
   @override
   Widget build(BuildContext context) {
-    return _isLogin
-        ? RefreshIndicator(
-            child: ListView.separated(
-              controller: _scrollController,
-              shrinkWrap: true,
-              itemCount: _wenDasList.length + 1,
-              itemBuilder: (BuildContext context, int index) {
-                if (index == _wenDasList.length) {
-                  if (_wenDasList.length == 0) {
-                    return null;
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: CupertinoActivityIndicator(),
-                    ),
-                  );
-                } else {
-                  var bean = _wenDasList[index];
-                  return GestureDetector(
-                      onTap: () {
-                        RequestApi.getWDDetail(bean.id).then((bean) {
-                          body = bean.body;
-                          if (mounted) {
-                            setState(() {
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                      child: WebViewPage(
-                                        bean.url,
-                                        titleName: bean.title,
-                                      ),
-                                      type: PageTransitionType
-                                          .rightToLeftWithFade));
+    return _isLogin == null
+        ? CupertinoActivityIndicator()
+        : (_isLogin
+            ? RefreshIndicator(
+                child: ListView.separated(
+                  controller: _scrollController,
+                  shrinkWrap: true,
+                  itemCount: _wenDasList.length + 1,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index == _wenDasList.length) {
+                      if (_wenDasList.length == 0) {
+                        return null;
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: CupertinoActivityIndicator(),
+                        ),
+                      );
+                    } else {
+                      var bean = _wenDasList[index];
+                      return GestureDetector(
+                          onTap: () {
+                            RequestApi.getWDDetail(bean.id).then((bean) {
+                              body = bean.body;
+                              if (mounted) {
+                                setState(() {
+                                  Navigator.push(
+                                      context,
+                                      PageTransition(
+                                          child: WebViewPage(
+                                            bean.url,
+                                            titleName: bean.title,
+                                          ),
+                                          type: PageTransitionType
+                                              .rightToLeftWithFade));
+                                });
+                              }
                             });
-                          }
-                        });
-                      },
-                      child: buildItemColumn(bean));
-                }
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return Divider(
-                  height: 1,
-                );
-              },
-            ),
-            onRefresh: () async {
-              _pageNum = 1;
-              await getWenDaList(_pageNum);
-            },
-          )
-        : Center(
-            child: FlatButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)),
-                color: Color(ColorUtils.c_666666),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.rightToLeftWithFade,
-                          child: LoginWebView()));
+                          },
+                          child: buildItemColumn(bean));
+                    }
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Divider(
+                      height: 1,
+                    );
+                  },
+                ),
+                onRefresh: () async {
+                  _pageNum = 1;
+                  await getWenDaList(_pageNum);
                 },
-                child: Text(
-                  '登录',
-                  style: TextStyle(color: Color(ColorUtils.c_ffffff)),
-                )),
-          );
+              )
+            : Center(
+                child: FlatButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    color: Color(ColorUtils.c_666666),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              type: PageTransitionType.rightToLeftWithFade,
+                              child: LoginWebView()));
+                    },
+                    child: Text(
+                      '登录',
+                      style: TextStyle(color: Color(ColorUtils.c_ffffff)),
+                    )),
+              ));
   }
 
   Widget buildItemColumn(PostList bean) {

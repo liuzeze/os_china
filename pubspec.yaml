@@ -30,6 +30,8 @@ dependencies:
   aeyrium_sensor: ^1.0.5
   #eventbus
   event_bus: ^1.1.0
+  #分享
+  share_extend: ^1.0.8
   flt_toast:
     path: ./flt_toast
 

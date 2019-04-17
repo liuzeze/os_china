@@ -4,25 +4,26 @@ import 'package:flutter_app/bean/tweet_list.dart';
 import 'package:flutter_app/eventbus/event_bus.dart';
 import 'package:flutter_app/eventbus/login_infor_event.dart';
 import 'package:flutter_app/http/request_api.dart';
-import 'package:flutter_app/ui/page/login_webview.dart';
-import 'package:flutter_app/ui/page/tweet_detail.dart';
+import 'package:flutter_app/ui/my/login_webview.dart';
+import 'package:flutter_app/ui/tweet/tweet_detail.dart';
 import 'package:flutter_app/utils/config_utils.dart';
 import 'package:flutter_app/utils/data_utils.dart';
-import 'package:flutter_app/utils/share_utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:share_extend/share_extend.dart';
 
 class Tweet extends StatefulWidget {
   @override
   _TweetState createState() => _TweetState();
 }
 
-class _TweetState extends State<Tweet> with SingleTickerProviderStateMixin {
+class _TweetState extends State<Tweet>
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   List<Tweetlist> _tweetList = [];
   int _pageNum = 1;
   ScrollController _scrollController;
   TextEditingController _controller = TextEditingController();
-  bool _isLogin=false;
+  bool _isLogin;
 
   @override
   void initState() {
@@ -31,6 +32,9 @@ class _TweetState extends State<Tweet> with SingleTickerProviderStateMixin {
       if (mounted) {
         setState(() {
           _isLogin = b;
+          if (_isLogin) {
+            getWenDaList(_pageNum);
+          }
         });
       }
     });
@@ -39,6 +43,7 @@ class _TweetState extends State<Tweet> with SingleTickerProviderStateMixin {
       if (mounted) {
         setState(() {
           _isLogin = true;
+          getWenDaList(_pageNum);
         });
       }
     });
@@ -57,7 +62,6 @@ class _TweetState extends State<Tweet> with SingleTickerProviderStateMixin {
           getWenDaList(_pageNum);
         }
       });
-    getWenDaList(_pageNum);
   }
 
   void getWenDaList(int pageNum) {
@@ -86,67 +90,69 @@ class _TweetState extends State<Tweet> with SingleTickerProviderStateMixin {
           '动弹',
         ),
       ),
-      body: _isLogin
-          ? RefreshIndicator(
-              child: ListView.separated(
-                controller: _scrollController,
-                shrinkWrap: true,
-                itemCount: _tweetList.length + 1,
-                itemBuilder: (BuildContext context, int index) {
-                  if (index == _tweetList.length) {
-                    if (_tweetList.length == 0) {
-                      return null;
-                    }
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: CupertinoActivityIndicator(),
-                      ),
-                    );
-                  } else {
-                    var bean = _tweetList[index];
-                    return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              PageTransition(
-                                  child: TweetDetailWidget(
-                                    bean.id,
-                                  ),
-                                  type:
-                                      PageTransitionType.rightToLeftWithFade));
-                        },
-                        child: buildItemColumn(bean));
-                  }
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return Divider(
-                    color: Color(ColorUtils.c_666666),
-                  );
-                },
-              ),
-              onRefresh: () async {
-                _pageNum = 1;
-                await getWenDaList(_pageNum);
-              },
-            )
-          : Center(
-              child: FlatButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)),
-                  color: Color(ColorUtils.c_666666),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        PageTransition(
-                            type: PageTransitionType.rightToLeftWithFade,
-                            child: LoginWebView()));
+      body: _isLogin == null
+          ? CupertinoActivityIndicator()
+          : (_isLogin
+              ? RefreshIndicator(
+                  child: ListView.separated(
+                    controller: _scrollController,
+                    shrinkWrap: true,
+                    itemCount: _tweetList.length + 1,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index == _tweetList.length) {
+                        if (_tweetList.length == 0) {
+                          return null;
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                            child: CupertinoActivityIndicator(),
+                          ),
+                        );
+                      } else {
+                        var bean = _tweetList[index];
+                        return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  PageTransition(
+                                      child: TweetDetailWidget(
+                                        bean.id,
+                                      ),
+                                      type: PageTransitionType
+                                          .rightToLeftWithFade));
+                            },
+                            child: buildItemColumn(bean));
+                      }
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return Divider(
+                        color: Color(ColorUtils.c_666666),
+                      );
+                    },
+                  ),
+                  onRefresh: () async {
+                    _pageNum = 1;
+                    await getWenDaList(_pageNum);
                   },
-                  child: Text(
-                    '登录',
-                    style: TextStyle(color: Color(ColorUtils.c_ffffff)),
-                  )),
-            ),
+                )
+              : Center(
+                  child: FlatButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      color: Color(ColorUtils.c_666666),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            PageTransition(
+                                type: PageTransitionType.rightToLeftWithFade,
+                                child: LoginWebView()));
+                      },
+                      child: Text(
+                        '登录',
+                        style: TextStyle(color: Color(ColorUtils.c_ffffff)),
+                      )),
+                )),
     );
   }
 
@@ -330,4 +336,8 @@ class _TweetState extends State<Tweet> with SingleTickerProviderStateMixin {
       },
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

@@ -3,8 +3,8 @@ import 'package:flutter_app/bean/news_list.dart' show Newslist;
 import 'package:flutter_app/eventbus/event_bus.dart';
 import 'package:flutter_app/eventbus/login_infor_event.dart';
 import 'package:flutter_app/http/request_api.dart';
-import 'package:flutter_app/ui/page/common_webview.dart';
-import 'package:flutter_app/ui/page/login_webview.dart';
+import 'package:flutter_app/ui/common_webview.dart';
+import 'package:flutter_app/ui/my/login_webview.dart';
 import 'package:flutter_app/utils/config_utils.dart';
 import 'package:flutter_app/utils/data_utils.dart';
 import 'package:flutter_app/widget/banner.dart';
@@ -17,7 +17,10 @@ class NewsChild extends StatefulWidget {
 }
 
 class _NewsChildState extends State<NewsChild>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
   var data2 = [
     BannerDataBean(
         title: '冬天雪景',
@@ -37,7 +40,7 @@ class _NewsChildState extends State<NewsChild>
   List<Newslist> _newsList = [];
   int _pageNum = 1;
   ScrollController _scrollController;
-  bool _login=false;
+  bool _login;
 
   @override
   void initState() {
@@ -46,6 +49,9 @@ class _NewsChildState extends State<NewsChild>
       if (mounted) {
         setState(() {
           _login = b;
+          if (_login) {
+            getNewsList(_pageNum);
+          }
         });
       }
     });
@@ -53,6 +59,7 @@ class _NewsChildState extends State<NewsChild>
       // All events are of type UserLoggedInEvent (or subtypes of it).
       if (mounted) {
         setState(() {
+          getNewsList(_pageNum);
           _login = true;
         });
       }
@@ -72,7 +79,6 @@ class _NewsChildState extends State<NewsChild>
           getNewsList(_pageNum);
         }
       });
-    getNewsList(_pageNum);
   }
 
   void getNewsList(int pageNum) {
@@ -93,78 +99,80 @@ class _NewsChildState extends State<NewsChild>
 
   @override
   Widget build(BuildContext context) {
-    return _login
-        ? RefreshIndicator(
-            child: ListView.separated(
-              controller: _scrollController,
-              shrinkWrap: true,
-              itemCount: _newsList.length + 2,
-              itemBuilder: (BuildContext context, int index) {
-                if (index == 0) {
-                  return buildBannerView();
-                } else if (index == _newsList.length + 1) {
-                  if (_newsList.length == 0) {
-                    return null;
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: CupertinoActivityIndicator(),
-                    ),
-                  );
-                } else {
-                  var bean = _newsList[index - 1];
-                  return GestureDetector(
-                      onTap: () {
-                        RequestApi.getNewsDetail(bean.id).then((bean) {
-                          if (mounted) {
-                            setState(() {
-                              Navigator.push(
-                                  context,
-                                  PageTransition(
-                                      child: WebViewPage(
-                                        bean.url,
-                                        id: bean.id,
-                                        favorite: bean.favorite,
-                                        titleName: bean.title,
-                                      ),
-                                      type: PageTransitionType
-                                          .rightToLeftWithFade));
+    return _login == null
+        ? CupertinoActivityIndicator()
+        : (_login
+            ? RefreshIndicator(
+                child: ListView.separated(
+                  controller: _scrollController,
+                  shrinkWrap: true,
+                  itemCount: _newsList.length + 2,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (index == 0) {
+                      return buildBannerView();
+                    } else if (index == _newsList.length + 1) {
+                      if (_newsList.length == 0) {
+                        return null;
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: CupertinoActivityIndicator(),
+                        ),
+                      );
+                    } else {
+                      var bean = _newsList[index - 1];
+                      return GestureDetector(
+                          onTap: () {
+                            RequestApi.getNewsDetail(bean.id).then((bean) {
+                              if (mounted) {
+                                setState(() {
+                                  Navigator.push(
+                                      context,
+                                      PageTransition(
+                                          child: WebViewPage(
+                                            bean.url,
+                                            id: bean.id,
+                                            favorite: bean.favorite,
+                                            titleName: bean.title,
+                                          ),
+                                          type: PageTransitionType
+                                              .rightToLeftWithFade));
+                                });
+                              }
                             });
-                          }
-                        });
-                      },
-                      child: buildItemColumn(bean));
-                }
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return Divider(
-                  height: 1,
-                );
-              },
-            ),
-            onRefresh: () async {
-              _pageNum = 1;
-              await getNewsList(_pageNum);
-            },
-          )
-        : Center(
-            child: FlatButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)),
-                color: Color(ColorUtils.c_666666),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                          type: PageTransitionType.rightToLeftWithFade,
-                          child: LoginWebView()));
+                          },
+                          child: buildItemColumn(bean));
+                    }
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return Divider(
+                      height: 1,
+                    );
+                  },
+                ),
+                onRefresh: () async {
+                  _pageNum = 1;
+                  await getNewsList(_pageNum);
                 },
-                child: Text(
-                  '登录',
-                  style: TextStyle(color: Color(ColorUtils.c_ffffff)),
-                )),
-          );
+              )
+            : Center(
+                child: FlatButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    color: Color(ColorUtils.c_666666),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          PageTransition(
+                              type: PageTransitionType.rightToLeftWithFade,
+                              child: LoginWebView()));
+                    },
+                    child: Text(
+                      '登录',
+                      style: TextStyle(color: Color(ColorUtils.c_ffffff)),
+                    )),
+              ));
   }
 
   Widget buildItemColumn(Newslist bean) {

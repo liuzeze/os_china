@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/ui/page/favorite_list.dart';
-import 'package:flutter_app/ui/page/message_list.dart';
-import 'package:flutter_app/ui/page/my_head_view.dart';
+import 'package:flutter_app/ui/my/favorite_list.dart';
+import 'package:flutter_app/ui/my/message_list.dart';
+import 'package:flutter_app/ui/my/my_head_view.dart';
 import 'package:flutter_app/utils/data_utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
@@ -13,6 +13,7 @@ class My extends StatefulWidget {
 
 class _MyState extends State<My> {
   List<String> myTitle;
+  List<IconData> _myIcons;
 
   @override
   void initState() {
@@ -26,6 +27,16 @@ class _MyState extends State<My> {
       '我的活动',
       '我的团队',
       '邀请好友',
+    ];
+    _myIcons = [
+      Icons.list,
+      Icons.message,
+      Icons.history,
+      Icons.vignette,
+      Icons.question_answer,
+      Icons.local_activity,
+      Icons.group,
+      Icons.child_friendly,
     ];
   }
 
@@ -66,12 +77,14 @@ class _MyState extends State<My> {
               });
             },
             trailing: Icon(Icons.arrow_forward_ios),
-            leading: Icon(Icons.contact_mail),
+            leading: Icon(_myIcons[index]),
           );
         }
       },
       separatorBuilder: (BuildContext context, int index) {
-        return Divider(height: 1,);
+        return Divider(
+          height: 1,
+        );
       },
       itemCount: myTitle.length + 1,
     );

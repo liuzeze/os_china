@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/bean/commont_lists.dart';
 import 'package:flutter_app/bean/message_list.dart';
 import 'package:flutter_app/http/request_api.dart';
-import 'package:flutter_app/ui/page/tweet_detail.dart';
+import 'package:flutter_app/ui/tweet/tweet_detail.dart';
 import 'package:flutter_app/utils/config_utils.dart';
 import 'package:page_transition/page_transition.dart';
 

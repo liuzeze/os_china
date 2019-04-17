@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/ui/page/news_child.dart';
-import 'package:flutter_app/ui/page/news_wenda.dart';
+import 'package:flutter_app/ui/news/news_child.dart';
+import 'package:flutter_app/ui/news/news_wenda.dart';
 import 'package:flutter_app/utils/config_utils.dart';
 import 'package:flutter_app/utils/screen_utils.dart';
 import 'package:flutter_app/widget/banner.dart';
@@ -10,7 +10,10 @@ class News extends StatefulWidget {
   _NewsState createState() => _NewsState();
 }
 
-class _NewsState extends State<News> with SingleTickerProviderStateMixin {
+class _NewsState extends State<News> with SingleTickerProviderStateMixin , AutomaticKeepAliveClientMixin{
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
   var data2 = [
     BannerDataBean(
         title: '冬天雪景',
