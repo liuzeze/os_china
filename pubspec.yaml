@@ -33,6 +33,9 @@ dependencies:
   event_bus: ^1.1.0
   #分享
   share_extend: ^1.0.8
+  #视屏
+  video_player: ^0.10.0+5
+  # html 格式显示
 
   fish_redux: ^0.1.4
 

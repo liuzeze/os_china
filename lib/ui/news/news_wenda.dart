@@ -11,7 +11,9 @@ import 'package:flutter_app/utils/data_utils.dart';
 import 'package:flutter_app/utils/screen_utils.dart';
 import 'package:flutter_app/widget/banner.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:video_player/video_player.dart';
 
 class WenDaList extends StatefulWidget {
   @override
@@ -28,9 +30,23 @@ class _WenDaListState extends State<WenDaList>
   int _pageNum = 1;
   ScrollController _scrollController;
 
+  VideoPlayerController _controller;
+  String url = 'http://www.sample-videos.com/video123/mp4/720/big_buck_bunny_720p_20mb.mp4';
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
   @override
   void initState() {
     super.initState();
+    _controller = VideoPlayerController.network(this.url)
+
+      // 在初始化完成后必须更新界面
+      ..initialize().then((_) {
+        setState(() {});
+      });
+
     _scrollController = ScrollController()
       ..addListener(() {
         if (_scrollController.position.pixels ==
@@ -44,8 +60,7 @@ class _WenDaListState extends State<WenDaList>
         setState(() {
           _isLogin = b;
           if (_isLogin) {
-
-          getWenDaList(_pageNum);
+            getWenDaList(_pageNum);
           }
         });
       }
@@ -74,6 +89,7 @@ class _WenDaListState extends State<WenDaList>
       setState(() {
         if (pageNum == 1) {
           _wenDasList.clear();
+          _controller.play();
         }
         _wenDasList.addAll(newslists);
       });
@@ -87,14 +103,27 @@ class _WenDaListState extends State<WenDaList>
   @override
   Widget build(BuildContext context) {
     return _isLogin == null
-        ? Center(child: CupertinoActivityIndicator(),)
+        ? Center(
+            child: CupertinoActivityIndicator(),
+          )
         : (_isLogin
             ? RefreshIndicator(
                 child: ListView.separated(
                   controller: _scrollController,
                   shrinkWrap: true,
-                  itemCount: _wenDasList.length + 1,
+                  itemCount: _wenDasList.length + 2,
                   itemBuilder: (BuildContext context, int index) {
+                    if (index == 0) {
+                      return Center(
+                          child: _controller.value.initialized
+                              // 加载成功
+                              ? new AspectRatio(
+                                  aspectRatio: _controller.value.aspectRatio,
+                                  child: VideoPlayer(_controller),
+                                )
+                              : new Container());
+                    }
+                    index--;
                     if (index == _wenDasList.length) {
                       if (_wenDasList.length == 0) {
                         return null;

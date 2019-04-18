@@ -66,13 +66,15 @@ class _TweetState extends State<Tweet>
 
   void getWenDaList(int pageNum) {
     RequestApi.getTweetList(pageNum).then((newslists) {
-      setState(() {
-        if (pageNum == 1) {
-          _tweetList.clear();
-        }
-        _tweetList.addAll(newslists);
-      });
-      _pageNum += 1;
+      if (mounted) {
+        setState(() {
+          if (pageNum == 1) {
+            _tweetList.clear();
+          }
+          _tweetList.addAll(newslists);
+        });
+        _pageNum += 1;
+      }
     });
   }
 
@@ -91,7 +93,9 @@ class _TweetState extends State<Tweet>
         ),
       ),
       body: _isLogin == null
-          ? Center(child: CupertinoActivityIndicator(),)
+          ? Center(
+              child: CupertinoActivityIndicator(),
+            )
           : (_isLogin
               ? RefreshIndicator(
                   child: ListView.separated(
@@ -187,7 +191,9 @@ class _TweetState extends State<Tweet>
     var children2 = <Widget>[
       Row(
         children: <Widget>[
-          CircleAvatar(backgroundImage: NetworkImage(bean.portrait),),
+          CircleAvatar(
+            backgroundImage: NetworkImage(bean.portrait),
+          ),
           SizedBox(
             width: SizeUtils.px_20,
           ),
