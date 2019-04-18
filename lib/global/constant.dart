@@ -23,5 +23,6 @@ class AppUrl {
   static const String FAVORITE_ADD  = '/action/openapi/favorite_add';
   static const String FAVORITE_REMOVE  = '/action/openapi/favorite_remove';
   static const String FAVORITE_LIST  = '/action/openapi/favorite_list';
+  static const String TWEET_PUB  = '/action/openapi/tweet_pub';
 }
 

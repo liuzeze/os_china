@@ -91,7 +91,7 @@ class _TweetState extends State<Tweet>
         ),
       ),
       body: _isLogin == null
-          ? CupertinoActivityIndicator()
+          ? Center(child: CupertinoActivityIndicator(),)
           : (_isLogin
               ? RefreshIndicator(
                   child: ListView.separated(
@@ -156,87 +156,125 @@ class _TweetState extends State<Tweet>
     );
   }
 
+  final RegExp regExp1 = new RegExp("</.*>");
+  final RegExp regExp2 = new RegExp("<.*>");
+
+  // 去掉文本中的html代码
+  String clearHtmlContent(String str) {
+    if (str.startsWith("<emoji")) {
+      return "[emoji]";
+    }
+    var s = str.replaceAll(regExp1, "");
+    s = s.replaceAll(regExp2, "");
+    s = s.replaceAll("\n", "");
+    return s;
+  }
+
   Widget buildItemColumn(Tweetlist bean) {
+    String _imgSmall = bean.imgSmall;
+    List<String> imgUrlList = new List<String>();
+    if (_imgSmall != null && _imgSmall.length > 0) {
+      List<String> list = _imgSmall.split(",");
+      print('list: $list');
+      for (String s in list) {
+        //！！
+        if (s.startsWith('https://static.oschina.net/uploads/space/https')) {
+          s = s.replaceAll('https://static.oschina.net/uploads/space/', '');
+        }
+        imgUrlList.add(s);
+      }
+    }
+    var children2 = <Widget>[
+      Row(
+        children: <Widget>[
+          CircleAvatar(backgroundImage: NetworkImage(bean.portrait),),
+          SizedBox(
+            width: SizeUtils.px_20,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                '${bean.author}',
+                maxLines: 2,
+                style: TextStyle(
+                  color: Color(ColorUtils.c_111111),
+                  fontSize: SizeUtils.px_30,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                '${bean.pubDate}',
+                maxLines: 2,
+                style: TextStyle(
+                  color: Color(ColorUtils.c_666666),
+                  fontSize: SizeUtils.px_25,
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+      SizedBox(
+        height: SizeUtils.px_15,
+      ),
+      Text(
+        '${clearHtmlContent(bean.body)}',
+        maxLines: 2,
+        style: TextStyle(
+          color: Color(ColorUtils.c_111111),
+          fontSize: SizeUtils.px_30,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ];
+
+    if (imgUrlList.length > 0) {
+      children2.add(Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: GridView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3, crossAxisSpacing: 6, mainAxisSpacing: 6),
+            scrollDirection: Axis.vertical,
+            itemCount: imgUrlList.length,
+            itemBuilder: (context, index) {
+              return Image.network(
+                imgUrlList[index],
+              );
+            }),
+      ));
+    }
+    children2.add(
+      Divider(
+        height: 25,
+      ),
+    );
+    children2.add(Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        InkWell(
+            onTap: () {
+              ShareExtend.share("${bean.body}", 'text');
+            },
+            child: buildRow(Icons.share, '转发')),
+        InkWell(
+            onTap: () {
+              //弹框
+              showAlertDialog(context, bean);
+            },
+            child: buildRow(Icons.comment, '${bean.commentCount}')),
+        InkWell(onTap: () {}, child: buildRow(Icons.touch_app, '赞')),
+      ],
+    ));
+
     return Padding(
       padding: const EdgeInsets.all(15),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Container(
-                width: SizeUtils.px_75,
-                height: SizeUtils.px_75,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: NetworkImage(bean.portrait),
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: SizeUtils.px_20,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    '${bean.author}',
-                    maxLines: 2,
-                    style: TextStyle(
-                      color: Color(ColorUtils.c_111111),
-                      fontSize: SizeUtils.px_30,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    '${bean.pubDate}',
-                    maxLines: 2,
-                    style: TextStyle(
-                      color: Color(ColorUtils.c_666666),
-                      fontSize: SizeUtils.px_25,
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
-          SizedBox(
-            height: SizeUtils.px_15,
-          ),
-          Text(
-            '${bean.body}',
-            maxLines: 2,
-            style: TextStyle(
-              color: Color(ColorUtils.c_111111),
-              fontSize: SizeUtils.px_30,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Divider(
-            height: 25,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              GestureDetector(
-                  onTap: () {
-                    ShareExtend.share("${bean.body}", 'text');
-                  },
-                  child: buildRow(Icons.share, '转发')),
-              GestureDetector(
-                  onTap: () {
-                    //弹框
-                    showAlertDialog(context, bean);
-                  },
-                  child: buildRow(Icons.comment, '${bean.commentCount}')),
-              GestureDetector(
-                  onTap: () {}, child: buildRow(Icons.touch_app, '赞')),
-            ],
-          )
-        ],
+        children: children2,
       ),
     );
   }
@@ -267,26 +305,33 @@ class _TweetState extends State<Tweet>
   void showAlertDialog(BuildContext context, Tweetlist bean) {
     showDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
         return Dialog(
             child: Container(
+          height: SizeUtils.px_600,
           padding: EdgeInsets.all(15),
-          height: SizeUtils.px_400,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(
-                '请输入评论内容',
-                style: TextStyle(fontWeight: FontWeight.bold),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  '请输入评论内容',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
               TextField(
+                scrollPadding: EdgeInsets.all(10),
+                maxLines: 6,
                 controller: _controller,
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   contentPadding: EdgeInsets.all(10.0),
-                  labelText: '请输入你的评论内容',
-                  helperText: '请输入你的评论内容',
+                  hintText: '请输入你的评论内容',
                 ),
                 autofocus: false,
               ),
@@ -294,7 +339,7 @@ class _TweetState extends State<Tweet>
                 children: <Widget>[
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(18.0),
                       child: RaisedButton(
                         child: Text('提交'),
                         onPressed: () {

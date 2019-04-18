@@ -13,7 +13,7 @@ dependencies:
   dio: ^2.1.0
   #webview 加载地址
   url_launcher: ^5.0.2
-  image_picker: ^0.5.0+9
+  image_picker: ^0.5.3+1
   #转场动画
   page_transition: ^1.0.9
   #webview
@@ -27,11 +27,15 @@ dependencies:
   #二维码扫描
   barcode_scan: ^1.0.0
   #传感器
-  aeyrium_sensor: ^1.0.5
+  sensors: ^0.4.0+1
+  vibration: 1.0.2
   #eventbus
   event_bus: ^1.1.0
   #分享
   share_extend: ^1.0.8
+
+  fish_redux: ^0.1.4
+
   flt_toast:
     path: ./flt_toast
 

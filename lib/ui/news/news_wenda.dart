@@ -87,7 +87,7 @@ class _WenDaListState extends State<WenDaList>
   @override
   Widget build(BuildContext context) {
     return _isLogin == null
-        ? CupertinoActivityIndicator()
+        ? Center(child: CupertinoActivityIndicator(),)
         : (_isLogin
             ? RefreshIndicator(
                 child: ListView.separated(

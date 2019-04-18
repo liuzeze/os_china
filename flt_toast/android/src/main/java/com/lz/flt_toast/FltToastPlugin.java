@@ -1,6 +1,9 @@
 package com.lz.flt_toast;
 
 import android.content.Context;
+import android.content.Intent;
+import android.text.Html;
+import android.text.Spanned;
 import android.widget.Toast;
 
 import io.flutter.plugin.common.MethodCall;
@@ -35,6 +38,10 @@ public class FltToastPlugin implements MethodCallHandler {
         } else if (call.method.equals("showToast")) {
             Toast.makeText(mContext,call.argument("text").toString(),Toast.LENGTH_SHORT).show();
             result.success(true);
+        }  else if (call.method.equals("fromHtml")) {
+            Spanned text = Html.fromHtml(call.argument("text").toString());
+
+            result.success(text.toString());
         } else {
             result.notImplemented();
         }

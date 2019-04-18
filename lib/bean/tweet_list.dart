@@ -60,6 +60,7 @@ class Tweetlist {
   int authorid;
   int commentCount;
   String portrait;
+  String imgSmall;
 
   Tweetlist(
       {this.id,
@@ -68,7 +69,9 @@ class Tweetlist {
         this.author,
         this.authorid,
         this.commentCount,
-        this.portrait});
+        this.portrait,
+        this.imgSmall
+      });
 
   Tweetlist.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -78,6 +81,7 @@ class Tweetlist {
     authorid = json['authorid'];
     commentCount = json['commentCount'];
     portrait = json['portrait'];
+    imgSmall = json['imgSmall'];
   }
 
   Map<String, dynamic> toJson() {
@@ -89,6 +93,7 @@ class Tweetlist {
     data['authorid'] = this.authorid;
     data['commentCount'] = this.commentCount;
     data['portrait'] = this.portrait;
+    data['imgSmall'] = this.imgSmall;
     return data;
   }
 }

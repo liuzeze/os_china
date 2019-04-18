@@ -100,7 +100,9 @@ class _NewsChildState extends State<NewsChild>
   @override
   Widget build(BuildContext context) {
     return _login == null
-        ? CupertinoActivityIndicator()
+        ? Center(
+            child: CupertinoActivityIndicator(),
+          )
         : (_login
             ? RefreshIndicator(
                 child: ListView.separated(

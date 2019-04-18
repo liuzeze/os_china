@@ -32,4 +32,7 @@ class SizeUtils {
   static final double px_300 = ScreenUtil().getWidthPx(300);
   static final double px_350 = ScreenUtil().getWidthPx(350);
   static final double px_400 = ScreenUtil().getWidthPx(400);
+  static final double px_500 = ScreenUtil().getWidthPx(500);
+  static final double px_600 = ScreenUtil().getWidthPx(600);
+  static final double px_800 = ScreenUtil().getWidthPx(800);
 }

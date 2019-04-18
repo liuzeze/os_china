@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_app/bean/WenDaDetail.dart';
 import 'package:flutter_app/bean/commont_lists.dart';
 import 'package:flutter_app/bean/favorite_list.dart';
@@ -184,7 +186,9 @@ class RequestApi {
         "dataType": 'json',
       };
     }).then((map) async {
-      return await HttpUtils.get(favorite==0?AppUrl.FAVORITE_ADD:AppUrl.FAVORITE_REMOVE, params: map);
+      return await HttpUtils.get(
+          favorite == 0 ? AppUrl.FAVORITE_ADD : AppUrl.FAVORITE_REMOVE,
+          params: map);
     });
   }
 
@@ -205,6 +209,7 @@ class RequestApi {
       });
     });
   }
+
   /// 获取动弹列表
   static Future<List<FavoriteList>> getFavoriteList(int pageNum) async {
     return await DataUtils.getToken().then((token) {
@@ -255,6 +260,19 @@ class RequestApi {
       }).catchError((e) {
         Fluttertoast.showToast(msg: e.toString());
       });
+    });
+  }
+
+  /// 获取问答详情
+  static Future<Map<String, dynamic>> tweetPub(String text, File file) async {
+    return await DataUtils.getToken().then((token) {
+      return new FormData.from({
+        "access_token": token,
+        "img": new UploadFileInfo(file, file.path),
+        "msg": text,
+      });
+    }).then((map) async {
+      return await HttpUtils.uploadFile(AppUrl.TWEET_PUB, params: map);
     });
   }
 }
