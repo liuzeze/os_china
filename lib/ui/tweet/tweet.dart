@@ -5,6 +5,7 @@ import 'package:flutter_app/eventbus/event_bus.dart';
 import 'package:flutter_app/eventbus/login_infor_event.dart';
 import 'package:flutter_app/http/request_api.dart';
 import 'package:flutter_app/ui/my/login_webview.dart';
+import 'package:flutter_app/ui/tweet/img_preview.dart';
 import 'package:flutter_app/ui/tweet/tweet_detail.dart';
 import 'package:flutter_app/utils/config_utils.dart';
 import 'package:flutter_app/utils/data_utils.dart';
@@ -246,8 +247,17 @@ class _TweetState extends State<Tweet>
             scrollDirection: Axis.vertical,
             itemCount: imgUrlList.length,
             itemBuilder: (context, index) {
-              return Image.network(
-                imgUrlList[index],
+              return InkWell(
+                onTap: (){
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.rightToLeftWithFade,
+                          child: ImgPreView(imgUrlList,index)));
+                },
+                child: Image.network(
+                  imgUrlList[index],
+                ),
               );
             }),
       ));
