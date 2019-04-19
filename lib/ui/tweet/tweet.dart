@@ -12,6 +12,7 @@ import 'package:flutter_app/utils/data_utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:share_extend/share_extend.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class Tweet extends StatefulWidget {
   @override
@@ -161,19 +162,7 @@ class _TweetState extends State<Tweet>
     );
   }
 
-  final RegExp regExp1 = new RegExp("</.*>");
-  final RegExp regExp2 = new RegExp("<.*>");
 
-  // 去掉文本中的html代码
-  String clearHtmlContent(String str) {
-    if (str.startsWith("<emoji")) {
-      return "[emoji]";
-    }
-    var s = str.replaceAll(regExp1, "");
-    s = s.replaceAll(regExp2, "");
-    s = s.replaceAll("\n", "");
-    return s;
-  }
 
   Widget buildItemColumn(Tweetlist bean) {
     String _imgSmall = bean.imgSmall;
@@ -225,15 +214,8 @@ class _TweetState extends State<Tweet>
       SizedBox(
         height: SizeUtils.px_15,
       ),
-      Text(
-        '${clearHtmlContent(bean.body)}',
-        maxLines: 2,
-        style: TextStyle(
-          color: Color(ColorUtils.c_111111),
-          fontSize: SizeUtils.px_30,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+      HtmlWidget(bean?.body ?? ""),
+
     ];
 
     if (imgUrlList.length > 0) {

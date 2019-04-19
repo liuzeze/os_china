@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/bean/tweet_detail.dart';
 import 'package:flutter_app/http/request_api.dart';
 import 'package:flutter_app/ui/tweet/commont_list.dart';
+import 'package:flutter_app/ui/tweet/img_preview.dart';
 import 'package:flutter_app/utils/config_utils.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class TweetDetailWidget extends StatefulWidget {
   int tweetId;
@@ -87,18 +90,47 @@ class _TweetDetailWidgetState extends State<TweetDetailWidget> {
 
     list.add(Padding(
       padding: const EdgeInsets.only(left: 15, right: 15),
-      child: Text(_tweetDetailBean?.body ?? ""),
+      child: HtmlWidget(_tweetDetailBean?.body ?? ""),
     ));
 
-    if (_tweetDetailBean?.imgSmall != null) {
-      list.add(Container(
-        alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.all(15.0),
-        child: Image.network(
-          _tweetDetailBean?.imgSmall,
-          height: SizeUtils.px_300,
-          width: SizeUtils.px_300,
-        ),
+    String _imgSmall = _tweetDetailBean?.imgSmall;
+    List<String> imgUrlList = new List<String>();
+    if (_imgSmall != null && _imgSmall.length > 0) {
+      List<String> list = _imgSmall.split(",");
+      print('list: $list');
+      for (String s in list) {
+        //！！
+        if (s.startsWith('https://static.oschina.net/uploads/space/https')) {
+          s = s.replaceAll('https://static.oschina.net/uploads/space/', '');
+        }
+        imgUrlList.add(s);
+      }
+    }
+
+    if (imgUrlList.length > 0) {
+      list.add(Padding(
+        padding: const EdgeInsets.all(10),
+        child: GridView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3, crossAxisSpacing: 6, mainAxisSpacing: 6),
+            scrollDirection: Axis.vertical,
+            itemCount: imgUrlList.length,
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                          type: PageTransitionType.rightToLeftWithFade,
+                          child: ImgPreView(imgUrlList, index)));
+                },
+                child: Image.network(
+                  imgUrlList[index],
+                ),
+              );
+            }),
       ));
     }
 
@@ -129,9 +161,11 @@ class _TweetDetailWidgetState extends State<TweetDetailWidget> {
     list.add(Divider(
       height: 0,
     ));
-    list.add(CommontListsWidget(
-        _tweetDetailBean?.id, _tweetDetailBean?.commentCount));
+    list.add(
+        CommontListsWidget(widget.tweetId, _tweetDetailBean?.commentCount));
 
     return list;
   }
+
+
 }

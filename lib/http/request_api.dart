@@ -126,7 +126,7 @@ class RequestApi {
     return await DataUtils.getToken().then((token) {
       return {
         "access_token": token,
-        "catalog": 1,
+        "catalog": 2,
         "pageIndex": pageNum,
         "pageSize": 20,
         "dataType": 'json',
@@ -145,7 +145,7 @@ class RequestApi {
     return await DataUtils.getToken().then((token) {
       return {
 //        'id': id,
-        'id': -1,
+        'id': id,
         "access_token": token,
         "catalog": 3,
         "pageIndex": pageNum,

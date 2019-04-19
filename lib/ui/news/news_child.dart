@@ -264,7 +264,7 @@ class _NewsChildState extends State<NewsChild>
   }
 }
 
-class BannerDataBean extends Object {
+class BannerDataBean  {
   String url;
   String title;
 

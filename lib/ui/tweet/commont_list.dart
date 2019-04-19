@@ -2,9 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/bean/commont_lists.dart';
 import 'package:flutter_app/http/request_api.dart';
-import 'package:flutter_app/ui/tweet/tweet_detail.dart';
 import 'package:flutter_app/utils/config_utils.dart';
-import 'package:page_transition/page_transition.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class CommontListsWidget extends StatefulWidget {
   int tweetId;
@@ -145,15 +144,8 @@ class _CommontListsWidgetState extends State<CommontListsWidget>
                         fontSize: SizeUtils.px_25,
                       ),
                     ),
-                    Text(
-                      '${bean?.content}',
-                      maxLines: 2,
-                      style: TextStyle(
-                        color: Color(ColorUtils.c_111111),
-                        fontSize: SizeUtils.px_30,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    HtmlWidget(bean?.content),
+
                   ],
                 ),
               )

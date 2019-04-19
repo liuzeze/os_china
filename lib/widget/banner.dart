@@ -130,6 +130,7 @@ class BannerViewState extends State<BannerView> {
                 children: <Widget>[
                   PageView.builder(
                     onPageChanged: (index) {
+
                       widget.onBannerClickListener(index % widget.data.length,
                           widget.data[index % widget.data.length]);
                       setState(() {
