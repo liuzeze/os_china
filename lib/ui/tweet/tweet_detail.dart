@@ -82,7 +82,7 @@ class _TweetDetailWidgetState extends State<TweetDetailWidget> {
                   ),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
