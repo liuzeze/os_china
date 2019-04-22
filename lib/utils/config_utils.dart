@@ -13,26 +13,27 @@ class ColorUtils {
 }
 
 class SizeUtils {
-  static final double px_2 = ScreenUtil().getWidthPx(2);
-  static final double px_5 = ScreenUtil().getWidthPx(5);
-  static final double px_8 = ScreenUtil().getWidthPx(8);
-  static final double px_10 = ScreenUtil().getWidthPx(10);
-  static final double px_15 = ScreenUtil().getWidthPx(15);
-  static final double px_20 = ScreenUtil().getWidthPx(20);
-  static final double px_23 = ScreenUtil().getWidthPx(23);
-  static final double px_25 = ScreenUtil().getWidthPx(25);
-  static final double px_30 = ScreenUtil().getWidthPx(30);
-  static final double px_35 = ScreenUtil().getWidthPx(35);
-  static final double px_40 = ScreenUtil().getWidthPx(40);
-  static final double px_50 = ScreenUtil().getWidthPx(50);
-  static final double px_75 = ScreenUtil().getWidthPx(75);
-  static final double px_90 = ScreenUtil().getWidthPx(90);
-  static final double px_95 = ScreenUtil().getWidthPx(95);
-  static final double px_100 = ScreenUtil().getWidthPx(100);
-  static final double px_300 = ScreenUtil().getWidthPx(300);
-  static final double px_350 = ScreenUtil().getWidthPx(350);
-  static final double px_400 = ScreenUtil().getWidthPx(400);
-  static final double px_500 = ScreenUtil().getWidthPx(500);
-  static final double px_600 = ScreenUtil().getWidthPx(600);
-  static final double px_800 = ScreenUtil().getWidthPx(800);
+  static final double px_2 = 1;
+  static final double px_5 = 2.5;
+  static final double px_8 = 4;
+  static final double px_10 =5;
+  static final double px_15 = 7.5;
+  static final double px_20 = 10;
+  static final double px_23 = 11.5;
+  static final double px_25 = 12.5;
+  static final double px_30 = 15;
+  static final double px_35 = 17.5;
+  static final double px_40 = 20;
+  static final double px_50 = 25;
+  static final double px_75 = 37.5;
+  static final double px_90 =45;
+  static final double px_95 = 47.5;
+  static final double px_100 = 50;
+  static final double px_300 = 150;
+  static final double px_350 = 175;
+  static final double px_400 = 200;
+  static final double px_500 = 250;
+  static final double px_600 =300;
+  static final double px_640 =320;
+  static final double px_800 = 400;
 }

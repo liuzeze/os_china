@@ -1,195 +1,113 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'dart:ui' as ui show window;
+import 'package:flutter/material.dart';
 
-///默认设计稿尺寸（单位 dp or pt）
-double _designW = 360.0;
-double _designH = 640.0;
-double _designD = 2.0;
+/**
+ * dp 单位
+ */
+const double SCREEN_WIDTH = 360;
 
-
-/// 配置设计稿尺寸 屏幕 宽，高，密度。
-/// Configuration design draft size  screen width, height, density.
-void setDesignWHD(double w, double h, {double density: 2.0}) {
-  _designW = w;
-  _designH = h;
-  _designD = density;
+double getAdapterRatio() {
+  return ui.window.physicalSize.width / SCREEN_WIDTH;
 }
+
+double getAdapterRatioRatio() {
+  return getAdapterRatio() / ui.window.devicePixelRatio;
+}
+
+Size getScreenAdapterSize() {
+  return Size(SCREEN_WIDTH, ui.window.physicalSize.height / getAdapterRatio());
+}
+
+//按照px来设置
+/*
 
 class ScreenUtil {
-  double _screenWidth = 0.0;
-  double _screenHeight = 0.0;
-  double _screenDensity = 0.0;
-  double _statusBarHeight = 0.0;
-  double _bottomBarHeight = 0.0;
-  double _appBarHeight = 0.0;
-  MediaQueryData _mediaQueryData;
+  static ScreenUtil instance = new ScreenUtil();
 
-  // 工厂模式
-  factory ScreenUtil() => _getInstance();
+  //设计稿的设备尺寸修改
+  double width;
+  double height;
+  bool allowFontScaling;
 
-  static ScreenUtil get instance => _getInstance();
-  static ScreenUtil _instance;
+  static MediaQueryData _mediaQueryData;
+  static double _screenWidth;
+  static double _screenHeight;
+  static double _pixelRatio;
+  static double _statusBarHeight;
 
-  ScreenUtil._internal() {
-    // 初始化
-    _init();
+  static double _bottomBarHeight;
+
+  static double _textScaleFactor;
+
+  ScreenUtil({
+    this.width = 1080,
+    this.height = 1920,
+    this.allowFontScaling = false,
+  });
+
+  static ScreenUtil getInstance(BuildContext context) {
+    return instance;
   }
 
-  static ScreenUtil _getInstance() {
-    if (_instance == null) {
-      _instance = new ScreenUtil._internal();
-    }
-    return _instance;
-  }
-
-  _init() {
-    MediaQueryData mediaQuery = MediaQueryData.fromWindow(ui.window);
-    if (_mediaQueryData != mediaQuery) {
-      _mediaQueryData = mediaQuery;
-      _screenWidth = mediaQuery.size.width;
-      _screenHeight = mediaQuery.size.height;
-      _screenDensity = mediaQuery.devicePixelRatio;
-      _statusBarHeight = mediaQuery.padding.top;
-      _bottomBarHeight = mediaQuery.padding.bottom;
-      _appBarHeight = kToolbarHeight;
-    }
-  }
-
-  /// screen width
-  /// 屏幕 宽
-  double get screenWidth => _screenWidth;
-
-  /// screen height
-  /// 屏幕 高
-  double get screenHeight => _screenHeight;
-
-  /// appBar height
-  /// appBar 高
-  double get appBarHeight => _appBarHeight;
-
-  /// screen density
-  /// 屏幕 像素密度
-  double get screenDensity => _screenDensity;
-
-  /// status bar Height
-  /// 状态栏高度
-  double get statusBarHeight => _statusBarHeight;
-
-  /// bottom bar Height
-  double get bottomBarHeight => _bottomBarHeight;
-
-  /// media Query Data
-  MediaQueryData get mediaQueryData => _mediaQueryData;
-
-  /// screen width
-  /// 当前屏幕 宽
-  static double getScreenW(BuildContext context) {
+  void init(BuildContext context) {
     MediaQueryData mediaQuery = MediaQuery.of(context);
-    return mediaQuery.size.width;
+    _mediaQueryData = mediaQuery;
+    _pixelRatio = mediaQuery.devicePixelRatio;
+    _screenWidth = mediaQuery.size.width;
+    _screenHeight = mediaQuery.size.height;
+    _statusBarHeight = mediaQuery.padding.top;
+    _bottomBarHeight = _mediaQueryData.padding.bottom;
+    _textScaleFactor = mediaQuery.textScaleFactor;
   }
 
-  /// screen height
-  /// 当前屏幕 高
-  static double getScreenH(BuildContext context) {
-    MediaQueryData mediaQuery = MediaQuery.of(context);
-    return mediaQuery.size.height;
-  }
+  static MediaQueryData get mediaQueryData => _mediaQueryData;
 
-  /// screen density
-  /// 当前屏幕 像素密度
-  static double getScreenDensity(BuildContext context) {
-    MediaQueryData mediaQuery = MediaQuery.of(context);
-    return mediaQuery.devicePixelRatio;
-  }
+  ///每个逻辑像素的字体像素数，字体的缩放比例
+  static double get textScaleFactory => _textScaleFactor;
 
-  /// status bar Height
-  /// 当前状态栏高度
-  static double getStatusBarH(BuildContext context) {
-    MediaQueryData mediaQuery = MediaQuery.of(context);
-    return mediaQuery.padding.top;
-  }
+  ///设备的像素密度
+  static double get pixelRatio => _pixelRatio;
 
-  /// status bar Height
-  /// 当前BottomBar高度
-  static double getBottomBarH(BuildContext context) {
-    MediaQueryData mediaQuery = MediaQuery.of(context);
-    return mediaQuery.padding.bottom;
-  }
+  ///当前设备宽度 dp
+  static double get screenWidthDp => _screenWidth;
 
-  /// 当前MediaQueryData
-  static MediaQueryData getMediaQueryData(BuildContext context) {
-    MediaQueryData mediaQuery = MediaQuery.of(context);
-    return mediaQuery;
-  }
+  ///当前设备高度 dp
+  static double get screenHeightDp => _screenHeight;
 
-  /// returns the size after adaptation according to the screen width.(unit dp or pt)
-  /// 返回根据屏幕宽适配后尺寸（单位 dp or pt）
-  /// size 单位 dp or pt
-  static double getScaleW(BuildContext context, double size) {
-    if (context == null || getScreenW(context) == 0.0) return size;
-    return size * getScreenW(context) / _designW;
-  }
+  ///当前设备宽度 px
+  static double get screenWidth => _screenWidth * _pixelRatio;
 
-  /// returns the size after adaptation according to the screen height.(unit dp or pt)
-  /// 返回根据屏幕高适配后尺寸 （单位 dp or pt）
-  /// size unit dp or pt
-  static double getScaleH(BuildContext context, double size) {
-    if (context == null || getScreenH(context) == 0.0) return size;
-    return size * getScreenH(context) / _designH;
-  }
+  ///当前设备高度 px
+  static double get screenHeight => _screenHeight * _pixelRatio;
 
-  /// returns the font size after adaptation according to the screen density.
-  /// 返回根据屏幕宽适配后字体尺寸
-  /// fontSize 字体尺寸
-  static double getScaleSp(BuildContext context, double fontSize) {
-    if (context == null || getScreenDensity(context) == 0.0) return fontSize;
-    return fontSize * getScreenW(context) / _designW;
-  }
+  ///状态栏高度 刘海屏会更高
+  static double get statusBarHeight => _statusBarHeight * _pixelRatio;
 
-  /// Orientation
-  /// 设备方向(portrait, landscape)
-  static Orientation getOrientation(BuildContext context) {
-    MediaQueryData mediaQuery = MediaQuery.of(context);
-    return mediaQuery.orientation;
-  }
+  ///底部安全区距离
+  static double get bottomBarHeight => _bottomBarHeight * _pixelRatio;
 
-  /// returns the size after adaptation according to the screen width.(unit dp or pt)
-  /// 返回根据屏幕宽适配后尺寸（单位 dp or pt）
-  /// size 单位 dp or pt
-  double getWidth(double size) {
-    return _screenWidth == 0.0 ? size : (size * _screenWidth / _designW);
-  }
+  ///实际的dp与设计稿px的比例
+  get scaleWidth => _screenWidth / instance.width;
 
-  /// returns the size after adaptation according to the screen height.(unit dp or pt)
-  /// 返回根据屏幕高适配后尺寸（单位 dp or pt）
-  /// size unit dp or pt
-  double getHeight(double size) {
-    return _screenHeight == 0.0 ? size : (size * _screenHeight / _designH);
-  }
+  get scaleHeight => _screenHeight / instance.height;
 
-  /// returns the size after adaptation according to the screen width.(unit dp or pt)
-  /// 返回根据屏幕宽适配后尺寸（单位 dp or pt）
-  /// sizePx unit px
-  double getWidthPx(double sizePx) {
-    return _screenWidth == 0.0
-        ? (sizePx / _designD)
-        : (sizePx * _screenWidth / (_designW * _designD));
-  }
+  ///根据设计稿的设备宽度适配
+  ///高度也根据这个来做适配可以保证不变形
+  setWidth(double width) => width * scaleWidth;
 
-  /// returns the size after adaptation according to the screen height.(unit dp or pt)
-  /// 返回根据屏幕高适配后尺寸（单位 dp or pt）
-  /// sizePx unit px
-  double getHeightPx(double sizePx) {
-    return _screenHeight == 0.0
-        ? (sizePx / _designD)
-        : (sizePx * _screenHeight / (_designH * _designD));
-  }
+  /// 根据设计稿的设备高度适配
+  /// 当发现设计稿中的一屏显示的与当前样式效果不符合时,
+  /// 或者形状有差异时,高度适配建议使用此方法
+  /// 高度适配主要针对想根据设计稿的一屏展示一样的效果
+  setHeight(double height) => height * scaleHeight;
 
-  /// returns the font size after adaptation according to the screen density.
-  /// 返回根据屏幕宽适配后字体尺寸
-  /// fontSize 字体尺寸
-  double getSp(double fontSize) {
-    if (_screenDensity == 0.0) return fontSize;
-    return fontSize * _screenWidth / _designW;
-  }
+  ///字体大小适配方法
+  ///@param fontSize 传入设计稿上字体的px ,
+  ///@param allowFontScaling 控制字体是否要根据系统的“字体大小”辅助选项来进行缩放。默认值为false。
+  ///@param allowFontScaling Specifies whether fonts should scale to respect Text Size accessibility settings. The default is false.
+  setSp(double fontSize) => allowFontScaling
+      ? setWidth(fontSize)
+      : setWidth(fontSize) / _textScaleFactor;
 }
+*/

@@ -111,7 +111,9 @@ class _FindState extends State<Find> with AutomaticKeepAliveClientMixin {
                   },
                 ),
               ),
-          separatorBuilder: (context, index) => Divider(),
+          separatorBuilder: (context, index) => Divider(
+                height: 1,
+              ),
           itemCount: _title.length),
     );
   }

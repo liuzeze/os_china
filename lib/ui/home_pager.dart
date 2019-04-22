@@ -20,6 +20,7 @@ class _HomePagerState extends State<HomePager> {
   int _currenntIndex = 0;
   PageController _pageController;
 
+
   @override
   void initState() {
     super.initState();

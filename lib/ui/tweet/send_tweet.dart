@@ -39,8 +39,7 @@ class _SendTweetState extends State<SendTweet> {
                 imgUrlList2 = imgUrlList[0];
               }
               setState(() {
-              isLoad = true;
-
+                isLoad = true;
               });
               RequestApi.tweetPub(_controller.text.toString(), imgUrlList2)
                   .then((map) {
@@ -51,13 +50,11 @@ class _SendTweetState extends State<SendTweet> {
                 }
                 setState(() {
                   isLoad = false;
-
                 });
               }).catchError((e) {
                 Fluttertoast.showToast(msg: e.toString());
                 setState(() {
-                isLoad = false;
-
+                  isLoad = false;
                 });
               });
             },
@@ -103,7 +100,7 @@ class _SendTweetState extends State<SendTweet> {
                           },
                           child: Icon(
                             Icons.add_photo_alternate,
-                            size: ScreenUtil.getScreenW(context) / 3,
+                            size: MediaQuery.of(context).size.width / 3,
                           ),
                         );
                       } else {
