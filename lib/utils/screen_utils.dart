@@ -20,74 +20,55 @@ Size getScreenAdapterSize() {
 }
 
 //按照px来设置
-/*
 
 class ScreenUtil {
-  static ScreenUtil instance = new ScreenUtil();
-
-  //设计稿的设备尺寸修改
-  double width;
-  double height;
-  bool allowFontScaling;
-
-  static MediaQueryData _mediaQueryData;
-  static double _screenWidth;
-  static double _screenHeight;
-  static double _pixelRatio;
-  static double _statusBarHeight;
-
-  static double _bottomBarHeight;
-
-  static double _textScaleFactor;
-
-  ScreenUtil({
-    this.width = 1080,
-    this.height = 1920,
-    this.allowFontScaling = false,
-  });
-
-  static ScreenUtil getInstance(BuildContext context) {
-    return instance;
-  }
-
-  void init(BuildContext context) {
-    MediaQueryData mediaQuery = MediaQuery.of(context);
-    _mediaQueryData = mediaQuery;
-    _pixelRatio = mediaQuery.devicePixelRatio;
-    _screenWidth = mediaQuery.size.width;
-    _screenHeight = mediaQuery.size.height;
-    _statusBarHeight = mediaQuery.padding.top;
-    _bottomBarHeight = _mediaQueryData.padding.bottom;
-    _textScaleFactor = mediaQuery.textScaleFactor;
-  }
-
-  static MediaQueryData get mediaQueryData => _mediaQueryData;
 
   ///每个逻辑像素的字体像素数，字体的缩放比例
-  static double get textScaleFactory => _textScaleFactor;
+  static double getTextScaleFactor(BuildContext context) {
+    return MediaQuery.of(context).textScaleFactor;
+  }
 
   ///设备的像素密度
-  static double get pixelRatio => _pixelRatio;
+  static double getpixelRatio(BuildContext context) {
+    return MediaQuery.of(context).devicePixelRatio;
+  }
 
   ///当前设备宽度 dp
-  static double get screenWidthDp => _screenWidth;
+  static double getScreenWidthDp(BuildContext context) {
+    return MediaQuery.of(context).size.width;
+  }
 
   ///当前设备高度 dp
-  static double get screenHeightDp => _screenHeight;
+  static double getScreenHeightDp(BuildContext context) {
+    return MediaQuery.of(context).size.height;
+  }
 
   ///当前设备宽度 px
-  static double get screenWidth => _screenWidth * _pixelRatio;
+  static double getScreenWidthPx(BuildContext context) {
+    return MediaQuery.of(context).size.width *
+        MediaQuery.of(context).devicePixelRatio;
+  }
 
   ///当前设备高度 px
-  static double get screenHeight => _screenHeight * _pixelRatio;
+  static double getScreenHeightPx(BuildContext context) {
+    return MediaQuery.of(context).size.height *
+        MediaQuery.of(context).devicePixelRatio;
+  }
 
   ///状态栏高度 刘海屏会更高
-  static double get statusBarHeight => _statusBarHeight * _pixelRatio;
-
+  static double getStatusBarHeightPx(BuildContext context) {
+    return MediaQuery.of(context).padding.top *
+        MediaQuery.of(context).devicePixelRatio;
+  }
   ///底部安全区距离
-  static double get bottomBarHeight => _bottomBarHeight * _pixelRatio;
+  static double getBottomBarHeightPx(BuildContext context) {
+    return MediaQuery.of(context).padding.bottom *
+        MediaQuery.of(context).devicePixelRatio;
+  }
 
-  ///实际的dp与设计稿px的比例
+
+
+ /* ///实际的dp与设计稿px的比例
   get scaleWidth => _screenWidth / instance.width;
 
   get scaleHeight => _screenHeight / instance.height;
@@ -108,6 +89,6 @@ class ScreenUtil {
   ///@param allowFontScaling Specifies whether fonts should scale to respect Text Size accessibility settings. The default is false.
   setSp(double fontSize) => allowFontScaling
       ? setWidth(fontSize)
-      : setWidth(fontSize) / _textScaleFactor;
+      : setWidth(fontSize) / _textScaleFactor;*/
+
 }
-*/

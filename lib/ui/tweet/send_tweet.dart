@@ -100,7 +100,7 @@ class _SendTweetState extends State<SendTweet> {
                           },
                           child: Icon(
                             Icons.add_photo_alternate,
-                            size: MediaQuery.of(context).size.width / 3,
+                            size: ScreenUtil.getScreenWidthDp(context)/ 3,
                           ),
                         );
                       } else {
