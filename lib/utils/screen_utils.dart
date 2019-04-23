@@ -45,25 +45,29 @@ class ScreenUtil {
 
   ///当前设备宽度 px
   static double getScreenWidthPx(BuildContext context) {
-    return MediaQuery.of(context).size.width *
-        MediaQuery.of(context).devicePixelRatio;
+    var queryData = MediaQuery.of(context);
+    return queryData.size.width *
+        queryData.devicePixelRatio;
   }
 
   ///当前设备高度 px
   static double getScreenHeightPx(BuildContext context) {
-    return MediaQuery.of(context).size.height *
-        MediaQuery.of(context).devicePixelRatio;
+    var queryData = MediaQuery.of(context);
+    return queryData.size.height *
+        queryData.devicePixelRatio;
   }
 
   ///状态栏高度 刘海屏会更高
   static double getStatusBarHeightPx(BuildContext context) {
-    return MediaQuery.of(context).padding.top *
-        MediaQuery.of(context).devicePixelRatio;
+    var queryData = MediaQuery.of(context);
+    return queryData.padding.top *
+        queryData.devicePixelRatio;
   }
   ///底部安全区距离
   static double getBottomBarHeightPx(BuildContext context) {
-    return MediaQuery.of(context).padding.bottom *
-        MediaQuery.of(context).devicePixelRatio;
+    var queryData = MediaQuery.of(context);
+    return queryData.padding.bottom *
+        queryData.devicePixelRatio;
   }
 
 
